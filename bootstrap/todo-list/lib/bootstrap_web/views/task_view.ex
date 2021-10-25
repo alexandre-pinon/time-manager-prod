@@ -12,7 +12,11 @@ defmodule TodolistWeb.TaskView do
 
   def render("task.json", %{task: task}) do
     %{
-      id: task.id
+      id: task.id,
+      description: task.description,
+      status: task.status,
+      title: task.title,
+      user_id: task.user_id
     }
   end
 end

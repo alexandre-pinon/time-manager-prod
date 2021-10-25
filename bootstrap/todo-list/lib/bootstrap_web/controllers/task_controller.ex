@@ -2,9 +2,9 @@ defmodule TodolistWeb.TaskController do
   use TodolistWeb, :controller
 
   alias Todolist.TaskManager
-  alias Todolist.TaskManager.Task
+  alias Todolist.Task
 
-  action_fallback TodolistWeb.FallbackController
+  action_fallback(TodolistWeb.FallbackController)
 
   def index(conn, _params) do
     tasks = TaskManager.list_tasks()
@@ -21,8 +21,9 @@ defmodule TodolistWeb.TaskController do
   end
 
   def show(conn, %{"id" => id}) do
-    task = TaskManager.get_task!(id)
-    render(conn, "show.json", task: task)
+    with {:ok, %Task{} = task} <- TaskManager.get_task!(id) do
+      render(conn, "show.json", task: task)
+    end
   end
 
   def update(conn, %{"id" => id, "task" => task_params}) do

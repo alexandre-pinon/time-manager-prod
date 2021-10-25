@@ -6,7 +6,7 @@ defmodule Todolist.TaskManager do
   import Ecto.Query, warn: false
   alias Todolist.Repo
 
-  alias Todolist.TaskManager.Task
+  alias Todolist.Task
 
   @doc """
   Returns the list of tasks.
@@ -18,7 +18,7 @@ defmodule Todolist.TaskManager do
 
   """
   def list_tasks do
-    raise "TODO"
+    Repo.all(Task)
   end
 
   @doc """
@@ -32,7 +32,12 @@ defmodule Todolist.TaskManager do
       %Task{}
 
   """
-  def get_task!(id), do: raise "TODO"
+  def get_task!(id) do
+    case Repo.get(Task, id) do
+     nil -> {:error, :not_found}
+     task -> {:ok, task}
+    end
+  end
 
   @doc """
   Creates a task.
@@ -47,7 +52,9 @@ defmodule Todolist.TaskManager do
 
   """
   def create_task(attrs \\ %{}) do
-    raise "TODO"
+    %Task{}
+    |> Task.changeset(attrs)
+    |> Repo.insert()
   end
 
   @doc """
@@ -62,7 +69,7 @@ defmodule Todolist.TaskManager do
       {:error, ...}
 
   """
-  def update_task(%Task{} = task, attrs) do
+  def update_task(%Task{} = _task, _attrs) do
     raise "TODO"
   end
 
@@ -78,7 +85,7 @@ defmodule Todolist.TaskManager do
       {:error, ...}
 
   """
-  def delete_task(%Task{} = task) do
+  def delete_task(%Task{} = _task) do
     raise "TODO"
   end
 
@@ -91,7 +98,7 @@ defmodule Todolist.TaskManager do
       %Todo{...}
 
   """
-  def change_task(%Task{} = task, _attrs \\ %{}) do
+  def change_task(%Task{} = _task, _attrs \\ %{}) do
     raise "TODO"
   end
 end
