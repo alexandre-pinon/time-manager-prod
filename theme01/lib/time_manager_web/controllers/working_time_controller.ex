@@ -12,9 +12,11 @@ defmodule TimeManagerAPIWeb.WorkingTimeController do
     render(conn, "index.json", workingtimes: workingtimes)
   end
 
-  def create(conn, %{"userID" => userID, "start" => start, "end" => endd}) do
-    working_time_params = %{"user_id" => userID, "start" => start, "end" => endd}
-    with {:ok, %WorkingTime{} = working_time} <- TimeManagerData.create_working_time(working_time_params) do
+  def create(conn, %{"userID" => userID, "working_time" => working_time_params}) do
+    working_time_params = Map.put(working_time_params, "user_id", userID)
+
+    with {:ok, %WorkingTime{} = working_time} <-
+           TimeManagerData.create_working_time(working_time_params) do
       conn
       |> put_status(:created)
       |> put_resp_header("location", Routes.working_time_path(conn, :show, working_time))
@@ -30,7 +32,8 @@ defmodule TimeManagerAPIWeb.WorkingTimeController do
   def update(conn, %{"id" => id, "working_time" => working_time_params}) do
     working_time = TimeManagerData.get_working_time!(id)
 
-    with {:ok, %WorkingTime{} = working_time} <- TimeManagerData.update_working_time(working_time, working_time_params) do
+    with {:ok, %WorkingTime{} = working_time} <-
+           TimeManagerData.update_working_time(working_time, working_time_params) do
       render(conn, "show.json", working_time: working_time)
     end
   end
