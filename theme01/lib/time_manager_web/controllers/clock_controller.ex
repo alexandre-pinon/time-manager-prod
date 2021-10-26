@@ -6,13 +6,14 @@ defmodule TimeManagerAPIWeb.ClockController do
 
   action_fallback TimeManagerAPIWeb.FallbackController
 
-  def index(conn, _params) do
-    clocks = TimeManagerData.list_clocks()
+  def index(conn, %{"userID" => userID}) do
+    clocks = TimeManagerData.list_clocks!(userID)
     render(conn, "index.json", clocks: clocks)
   end
 
-  def create(conn, %{"time" => time, "status" => status, "userID" => userID}) do
-    with {:ok, %Clock{} = clock} <- TimeManagerData.create_clock(%{time: time, status: status, user: userID}) do
+  def create(conn, %{"clock" => clock_params, "userID" => userID}) do
+    clock_params = Map.put(clock_params, "user_id", userID)
+    with {:ok, %Clock{} = clock} <- TimeManagerData.create_clock(clock_params) do
       conn
       |> put_status(:created)
       |> put_resp_header("location", Routes.clock_path(conn, :show, clock))
@@ -20,8 +21,8 @@ defmodule TimeManagerAPIWeb.ClockController do
     end
   end
 
-  def show(conn, %{"userID" => userID}) do
-    clock = TimeManagerData.get_clock!(userID)
+  def show(conn, %{"id" => id}) do
+    clock = TimeManagerData.get_clock!(id)
     render(conn, "show.json", clock: clock)
   end
 

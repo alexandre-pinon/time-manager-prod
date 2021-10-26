@@ -2,11 +2,11 @@ import Config
 
 # Configure your database
 config :time_manager, TimeManagerAPI.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: "froggeater",
+  password: "fe29061999",
   database: "time_manager",
   hostname: "localhost",
-  port: "5435",
+  port: "5432",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
