@@ -14,6 +14,7 @@ defmodule TimeManagerWeb.Router do
     #get "/workingtimes/:userID", WorkingTimeController, :index
     post "/workingtimes/:userID", WorkingTimeController, :create
 
+
     get "/clocks/:userID", ClockingController, :index
     post "/clocks/:userID", ClockingController, :update
 
@@ -22,6 +23,9 @@ defmodule TimeManagerWeb.Router do
 
       get "/users/:userID", WorkingTimeController, :index
     end
+
+    get "/clocks/:userID", ClockController, :index
+    post "/clocks/:userID", ClockController, :update
   end
 
   # Enables LiveDashboard only for development
