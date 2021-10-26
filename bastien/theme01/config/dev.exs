@@ -6,7 +6,7 @@ config :timemanager, TimeManager.Repo,
   password: "fe29061999",
   database: "timemanager_dev",
   hostname: "localhost",
-  socket_dir: "/var/run/postgresql",
+  # socket_dir: "/var/run/postgresql", # COMMENT OUT FOR WINDOWS 😅
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
