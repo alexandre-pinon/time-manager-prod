@@ -12,7 +12,7 @@ defmodule TimeManagerWeb.UserController do
       conn
       |> put_resp_content_type("application/json")
       |> put_status(200)
-      |> json(%{"users" => users})
+      |> render("index.json", users: users)
     end
   end
 
@@ -21,7 +21,7 @@ defmodule TimeManagerWeb.UserController do
       conn
       |> put_resp_content_type("application/json")
       |> put_status(200)
-      |> json(%{"users" => users})
+      |> render("index.json", users: users)
     end
   end
 end
