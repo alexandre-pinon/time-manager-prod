@@ -7,5 +7,3 @@ defmodule TimeManagerWeb.WorkingTimeController do
     conn
 
   end
-
-end
