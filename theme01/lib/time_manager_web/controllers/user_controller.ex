@@ -6,6 +6,21 @@ defmodule TimeManagerAPIWeb.UserController do
 
   action_fallback TimeManagerAPIWeb.FallbackController
 
+  def index(conn, %{"email" => email, "username" => username}) do
+    users = TimeManagerData.list_users(email, username)
+    render(conn, "index.json", users: users)
+  end
+
+  def index(conn, %{"email" => email}) do
+    users = TimeManagerData.list_users(email: email)
+    render(conn, "index.json", users: users)
+  end
+
+  def index(conn, %{"username" => username}) do
+    users = TimeManagerData.list_users(username: username)
+    render(conn, "index.json", users: users)
+  end
+
   def index(conn, _params) do
     users = TimeManagerData.list_users()
     render(conn, "index.json", users: users)

@@ -17,6 +17,25 @@ defmodule TimeManagerAPI.TimeManagerData do
       [%User{}, ...]
 
   """
+  def list_users(email, username) do
+    User
+    |> where(email: ^email)
+    |> where(username: ^username)
+    |> Repo.all()
+  end
+
+  def list_users(email: email) do
+    User
+    |> where(email: ^email)
+    |> Repo.all()
+  end
+
+  def list_users(username: username) do
+    User
+    |> where(username: ^username)
+    |> Repo.all()
+  end
+
   def list_users do
     Repo.all(User)
   end
