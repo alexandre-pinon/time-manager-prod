@@ -11,11 +11,17 @@ defmodule TimeManagerWeb.Router do
     resources "/users", UserController, except: [:new, :edit]
     resources "/workingtimes", WorkingTimeController, only: [:show, :update, :delete]
 
-    get "/workingtimes/:userID", WorkingTimeController, :index
+    #get "/workingtimes/:userID", WorkingTimeController, :index
     post "/workingtimes/:userID", WorkingTimeController, :create
 
     get "/clocks/:userID", ClockingController, :index
     post "/clocks/:userID", ClockingController, :update
+
+    #new scope for route "/workingtimes/users/:userID"
+    scope "/workingtimes", WorkingTimeController do
+
+      get "/users/:userID", WorkingTimeController, :index
+    end
   end
 
   # Enables LiveDashboard only for development
