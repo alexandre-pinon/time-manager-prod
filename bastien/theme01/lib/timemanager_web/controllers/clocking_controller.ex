@@ -1,4 +1,4 @@
-defmodule TimeManagerWeb.ClockingController do
+defmodule TimeManagerWeb.ClockController do
   use TimeManagerWeb, :controller
 
   def index(conn, %{"userID" => userID}) do

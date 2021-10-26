@@ -131,7 +131,7 @@ defmodule TimeManagerAPI.TimeManagerData do
       ** (Ecto.NoResultsError)
 
   """
-  def get_clock!(id), do: Repo.get!(Clock, id)
+  def get_clock!(user), do: Repo.get_by!(Clock, user)
 
   @doc """
   Creates a clock.

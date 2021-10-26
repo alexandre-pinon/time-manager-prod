@@ -17,8 +17,8 @@ defmodule TimeManagerAPIWeb.Router do
     end
 
     scope "/clocks", ClockController do
-      get "/:userID", ClockController, :index
-      post "/:userID", ClockController, :update
+      get "/:userID", ClockController, :show
+      post "/:userID", ClockController, :create
     end
   end
 
