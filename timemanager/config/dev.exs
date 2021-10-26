@@ -1,10 +1,10 @@
 import Config
 
 # Configure your database
-config :time_manager, TimeManagerAPI.Repo,
+config :timemanager, TimeManager.Repo,
   username: "postgres",
   password: "postgres",
-  database: "time_manager",
+  database: "timemanager_dev",
   hostname: "localhost",
   port: "5435",
   show_sensitive_data_on_connection_error: true,
@@ -16,14 +16,14 @@ config :time_manager, TimeManagerAPI.Repo,
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we use it
 # with esbuild to bundle .js and .css sources.
-config :time_manager, TimeManagerAPIWeb.Endpoint,
+config :timemanager, TimeManagerWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
   http: [ip: {127, 0, 0, 1}, port: 4000],
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: "wsQcrbGXjNrB/zN+nSQpQXQG3YwVh+3q8Ce6fS8Y8iNwgUudA8fSV1RrqvktAWqX",
+  secret_key_base: "/wEDFeDZlFBWsNA6uqFka6BnUywpT7+xqmC7td42n6u6aKTUpTIXsRRjJ0ikHTdu",
   watchers: []
 
 # ## SSL Support
