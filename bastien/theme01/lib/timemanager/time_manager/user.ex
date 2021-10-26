@@ -5,8 +5,8 @@ defmodule TimeManager.TimeManager.User do
   @mail_regex ~r/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/
 
   schema "users" do
-    field :email, :string, null: false
-    field :username, :string, null: false
+    field :email, :string
+    field :username, :string
 
     timestamps()
   end
