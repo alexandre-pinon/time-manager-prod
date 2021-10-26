@@ -10,6 +10,7 @@ config :time_manager, TimeManagerAPI.Repo,
   password: "postgres",
   database: "time_manager_test#{System.get_env("MIX_TEST_PARTITION")}",
   hostname: "localhost",
+  port: "5435",
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10
 
