@@ -11,7 +11,8 @@ defmodule TimeManagerAPIWeb.WorkingTimeController do
     render(conn, "index.json", workingtimes: workingtimes)
   end
 
-  def create(conn, %{"working_time" => working_time_params}) do
+  def create(conn, %{"userID" => userID, "start" => start, "end" => endd}) do
+    working_time_params = %{"user_id" => userID, "start" => start, "end" => endd}
     with {:ok, %WorkingTime{} = working_time} <- TimeManagerData.create_working_time(working_time_params) do
       conn
       |> put_status(:created)
