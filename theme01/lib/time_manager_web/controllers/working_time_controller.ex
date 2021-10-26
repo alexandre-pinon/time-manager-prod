@@ -6,8 +6,9 @@ defmodule TimeManagerAPIWeb.WorkingTimeController do
 
   action_fallback TimeManagerAPIWeb.FallbackController
 
-  def index(conn, _params) do
-    workingtimes = TimeManagerData.list_workingtimes()
+  @spec index(Plug.Conn.t(), any) :: Plug.Conn.t()
+  def index(conn, %{"userID" => userID}) do
+    workingtimes = TimeManagerData.list_workingtimes(userID)
     render(conn, "index.json", workingtimes: workingtimes)
   end
 

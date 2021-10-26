@@ -209,8 +209,8 @@ defmodule TimeManagerAPI.TimeManagerData do
       [%WorkingTime{}, ...]
 
   """
-  def list_workingtimes do
-    Repo.all(WorkingTime)
+  def list_workingtimes(userID) do
+    Repo.all(from w in WorkingTime, where: w.user_id == ^userID)
   end
 
   @doc """
