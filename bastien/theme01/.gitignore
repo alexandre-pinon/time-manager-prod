@@ -1,18 +1,17 @@
-.elixir_ls
 # The directory Mix will write compiled artifacts to.
-bootstrap/todo-list/_build/
+/_build/
 
 # If you run "mix test --cover", coverage assets end up here.
-bootstrap/todo-list/cover/
+/cover/
 
 # The directory Mix downloads your dependencies sources to.
-bootstrap/todo-list/deps/
+/deps/
 
 # Where 3rd-party dependencies like ExDoc output generated docs.
-bootstrap/todo-list/doc/
+/doc/
 
 # Ignore .fetch files in case you like to edit your project deps locally.
-bootstrap/todo-list/.fetch
+/.fetch
 
 # If the VM crashes, it generates a dump, let's ignore it too.
 erl_crash.dump
@@ -21,4 +20,5 @@ erl_crash.dump
 *.ez
 
 # Ignore package tarball (built via "mix hex.build").
-bootstrap-*.tar
+timemanager-*.tar
+
