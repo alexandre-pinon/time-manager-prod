@@ -5,7 +5,8 @@ defmodule TimeManagerAPI.TimeManagerData.WorkingTime do
   schema "workingtimes" do
     field :end, :naive_datetime
     field :start, :naive_datetime
-    field :user, :id
+
+    belongs_to :user, TimeManagerAPI.TimeManagerData.User
 
     timestamps()
   end
