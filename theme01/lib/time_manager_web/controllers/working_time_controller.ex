@@ -6,6 +6,21 @@ defmodule TimeManagerAPIWeb.WorkingTimeController do
 
   action_fallback TimeManagerAPIWeb.FallbackController
 
+  def index(conn, %{"userID" => userID, "start" => start, "end" => endd}) do
+    workingtimes = TimeManagerData.list_workingtimes!(userID, start, endd)
+    render(conn, "index.json", workingtimes: workingtimes)
+  end
+
+  def index(conn, %{"userID" => userID, "start" => start}) do
+    workingtimes = TimeManagerData.list_workingtimes_by_start(userID, start)
+    render(conn, "index.json", workingtimes: workingtimes)
+  end
+
+  def index(conn, %{"userID" => userID, "end" => endd}) do
+    workingtimes = TimeManagerData.list_workingtimes_by_end(userID, endd)
+    render(conn, "index.json", workingtimes: workingtimes)
+  end
+
   def index(conn, %{"userID" => userID}) do
     workingtimes = TimeManagerData.list_workingtimes!(userID)
     render(conn, "index.json", workingtimes: workingtimes)

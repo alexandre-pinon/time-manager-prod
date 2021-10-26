@@ -228,8 +228,39 @@ defmodule TimeManagerAPI.TimeManagerData do
       [%WorkingTime{}, ...]
 
   """
+  def list_workingtimes!(userID, start, endd) do
+    {:ok, naive_date_time_start} = NaiveDateTime.from_iso8601(start <> " 00:00:00")
+    {:ok, naive_date_time_end} = NaiveDateTime.from_iso8601(endd <> " 00:00:00")
+
+    WorkingTime
+    |> where(user_id: ^userID)
+    |> where([w], w.start >= ^naive_date_time_start)
+    |> where([w], w.end <= ^naive_date_time_end)
+    |> Repo.all()
+  end
+
+  def list_workingtimes_by_start(userID, start) do
+    {:ok, naive_date_time_start} = NaiveDateTime.from_iso8601(start <> " 00:00:00")
+
+    WorkingTime
+    |> where(user_id: ^userID)
+    |> where([w], w.start >= ^naive_date_time_start)
+    |> Repo.all()
+  end
+
+  def list_workingtimes_by_end(userID, endd) do
+    {:ok, naive_date_time_end} = NaiveDateTime.from_iso8601(endd <> " 00:00:00")
+
+    WorkingTime
+    |> where(user_id: ^userID)
+    |> where([w], w.end <= ^naive_date_time_end)
+    |> Repo.all()
+  end
+
   def list_workingtimes!(userID) do
-    Repo.all(from w in WorkingTime, where: w.user_id == ^userID)
+    WorkingTime
+    |> where(user_id: ^userID)
+    |> Repo.all()
   end
 
   @doc """
