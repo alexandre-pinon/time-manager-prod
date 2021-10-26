@@ -9,13 +9,17 @@ defmodule TimeManagerAPIWeb.Router do
     pipe_through :api
 
     resources "/users", UserController, except: [:new, :edit]
-    resources "/workingtimes", WorkingTimeController, only: [:show, :update, :delete]
 
-    get "/workingtimes/:userID", WorkingTimeController, :index
-    post "/workingtimes/:userID", WorkingTimeController, :create
+    scope "/workingtimes", WorkingTimeController do
+      resources "/", WorkingTimeController, only: [:show, :update, :delete]
+      get "/users/:userID", WorkingTimeController, :index
+      post "/:userID", WorkingTimeController, :create
+    end
 
-    get "/clocks/:userID", ClockingController, :index
-    post "/clocks/:userID", ClockingController, :update
+    scope "/clocks", ClockController do
+      get "/:userID", ClockController, :index
+      post "/:userID", ClockController, :update
+    end
   end
 
   # Enables the Swoosh mailbox preview in development.
