@@ -18,6 +18,11 @@ defmodule MyapiWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+
+    resources "/users", PageController, except: [:new, :edit]
+    resources "/api", PageController, except: [:new, :edit]
+    resources "/api/tasks", PageController, except: [:new, :edit]
+
   end
 
   # Other scopes may use custom stacks.
