@@ -2,12 +2,12 @@ import Config
 
 # Configure your database
 config :myapi, Myapi.Repo,
-  username: "postgres",
-  password: "postgres",
-  database: "myapi_dev",
-  hostname: "localhost",
+  username: "uytsm5mumkm2j7jnlx6i",
+  password: "VPdPCM0y3K510E2n4aPk",
+  database: "bxyt1tnkcfmrpudgvadz",
+  hostname: "bxyt1tnkcfmrpudgvadz-postgresql.services.clever-cloud.com",
   show_sensitive_data_on_connection_error: true,
-  pool_size: 10
+  pool_size: 1
 
 # For development, we disable any cache and enable
 # debugging and code reloading.
