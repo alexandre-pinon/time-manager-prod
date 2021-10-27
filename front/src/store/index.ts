@@ -1,7 +1,5 @@
-import Vue from "vue";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Vuex from "vuex";
-
-Vue.use(Vuex);
 
 export const store = new Vuex.Store({
   state: {

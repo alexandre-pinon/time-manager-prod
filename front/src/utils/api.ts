@@ -18,7 +18,7 @@ class API {
     const { url } = this;
     console.log("createUser : ", username, email);
     return await axios
-      .post(`${url}/users`, { user: { username, email }})
+      .post(`${url}/users`, { user: { username, email } })
       .then((result: any) => result?.data)
       .catch((err: any) => this.handleError("createUser", err));
   };
@@ -45,6 +45,35 @@ class API {
       .get(`${url}/users/${id}`)
       .then((result: any) => result?.data)
       .catch((err: any) => this.handleError("getUser", err));
+  };
+
+  createWorkingTime = async (
+    id: number, // user ID, not working time ID
+    start: string,
+    end: string
+  ): Promise<any> => {
+    const { url } = this;
+    console.log("createWorkingTime : ", start, end);
+    return await axios
+      .post(`${url}/workingtimes/${id}`, { working_time: { start, end } })
+      .then((result: any) => result?.data)
+      .catch((err: any) => this.handleError("createWorkingTime", err));
+  };
+  updateWorkingTime = async (id: number, workingTime: any): Promise<any> => {
+    const { url } = this;
+    console.log("updateWorkingTime : ", id, workingTime);
+    return await axios
+      .put(`${url}/workingtimes/${id}`, { workingTime })
+      .then((result: any) => result?.data)
+      .catch((err: any) => this.handleError("updateWorkingTime", err));
+  };
+  deleteWorkingTime = async (id: number): Promise<any> => {
+    const { url } = this;
+    console.log("deleteWorkingTime : ", id);
+    return await axios
+      .delete(`${url}/workingtimes/${id}`)
+      .then((result: any) => result?.data)
+      .catch((err: any) => this.handleError("deleteWorkingTime", err));
   };
 }
 
