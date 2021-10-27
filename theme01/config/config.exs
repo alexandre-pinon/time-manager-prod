@@ -7,6 +7,8 @@
 # General application configuration
 import Config
 
+# config :cors_plug,
+
 config :time_manager,
   namespace: TimeManagerAPI,
   ecto_repos: [TimeManagerAPI.Repo]

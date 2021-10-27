@@ -1,24 +1,28 @@
 <template>
-  <div id="app">
+  <div id="app" class="application">
     <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+    <User />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import HelloWorld from "./components/HelloWorld.vue";
+import { store } from "@/store/store";
+// import HelloWorld from "./components/HelloWorld.vue";
+import { User } from "@/components";
 
 export default Vue.extend({
   name: "App",
+  store,
   components: {
-    HelloWorld,
+    // HelloWorld,
+    User,
   },
 });
 </script>
 
-<style>
-#app {
+<style lang="scss">
+div.application {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
