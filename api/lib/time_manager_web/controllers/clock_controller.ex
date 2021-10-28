@@ -11,6 +11,11 @@ defmodule TimeManagerAPIWeb.ClockController do
     render(conn, "index.json", clocks: clocks)
   end
 
+  def index(conn, _params) do
+    clocks = TimeManagerData.list_clocks()
+    render(conn, "index.json", clocks: clocks)
+  end
+
   def create(conn, %{"clock" => clock_params, "userID" => userID}) do
     clock_params = Map.put(clock_params, "user_id", userID)
     with {:ok, %Clock{} = clock} <- TimeManagerData.create_clock(clock_params) do

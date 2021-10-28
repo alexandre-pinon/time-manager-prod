@@ -3,9 +3,7 @@ import axios from "axios";
 import _ from "lodash";
 import moment from "moment";
 
-const handleError = (source: string, err: any): void => {
-  console.error("API | " + source + " > ", err);
-};
+import { handleError } from "@/utils/helpers";
 
 class API {
   url = "http://localhost";
@@ -65,7 +63,12 @@ class API {
     const { url } = this;
     console.log("createWorkingTime : ", id, start, end);
     return await axios
-      .post(`${url}/workingtimes/${id}`, { working_time: { start, end } })
+      .post(`${url}/workingtimes/${id}`, {
+        working_time: {
+          start: moment(start).format("YYYY-MM-DD HH:mm:ss"),
+          end: moment(end).format("YYYY-MM-DD HH:mm:ss"),
+        },
+      })
       .then((result: any) => result?.data)
       .catch((err: any) => handleError("createWorkingTime", err));
   };
@@ -73,7 +76,7 @@ class API {
     const { url } = this;
     console.log("updateWorkingTime : ", id, workingTime);
     return await axios
-      .put(`${url}/workingtimes/${id}`, { workingTime })
+      .put(`${url}/workingtimes/${id}`, { working_time: workingTime })
       .then((result: any) => result?.data)
       .catch((err: any) => handleError("updateWorkingTime", err));
   };
@@ -114,9 +117,73 @@ class API {
           ).join("&")
         : "";
     return await axios
-      .get(`${url}/workingtimes/${id}${params}`)
+      .get(`${url}/workingtimes/users/${id}${params}`)
       .then((result: any) => result?.data)
       .catch((err: any) => handleError("getWorkingTimes", err));
+  };
+  getAllWorkingTimes = async (): Promise<any> => {
+    const { url } = this;
+    console.log("getAllWorkingTimes");
+    return await axios
+      .get(`${url}/workingtimes`)
+      .then((result: any) => result?.data)
+      .catch((err: any) => handleError("getAllWorkingTimes", err));
+  };
+
+  createClock = async (
+    id: number, // user ID, not clock ID
+    time: string,
+    status: boolean
+  ): Promise<any> => {
+    const { url } = this;
+    console.log("createClock : ", id, time, status);
+    return await axios
+      .post(`${url}/clocks/${id}`, {
+        clock: { time: moment(time).format("YYYY-MM-DD HH:mm:ss"), status },
+      })
+      .then((result: any) => result?.data)
+      .catch((err: any) => handleError("createClock", err));
+  };
+  updateClock = async (id: number, clock: any): Promise<any> => {
+    const { url } = this;
+    console.log("updateClock : ", id, clock);
+    return await axios
+      .put(`${url}/clocks/${id}`, { clock })
+      .then((result: any) => result?.data)
+      .catch((err: any) => handleError("updateClock", err));
+  };
+  deleteClock = async (id: number): Promise<any> => {
+    const { url } = this;
+    console.log("deleteClock : ", id);
+    return await axios
+      .delete(`${url}/clocks/${id}`)
+      .then((result: any) => result?.data)
+      .catch((err: any) => handleError("deleteClock", err));
+  };
+  getClock = async (id: number): Promise<any> => {
+    const { url } = this;
+    console.log("getClock : ", id);
+    return await axios
+      .get(`${url}/clocks/${id}`)
+      .then((result: any) => result?.data)
+      .catch((err: any) => handleError("getClock", err));
+  };
+  getClocks = async (id: number): Promise<any> => {
+    // user ID, not clock ID
+    const { url } = this;
+    console.log("getClocks : ", id);
+    return await axios
+      .get(`${url}/clocks/users/${id}`)
+      .then((result: any) => result?.data)
+      .catch((err: any) => handleError("getClocks", err));
+  };
+  getAllClocks = async (): Promise<any> => {
+    const { url } = this;
+    console.log("getAllClocks");
+    return await axios
+      .get(`${url}/clocks`)
+      .then((result: any) => result?.data)
+      .catch((err: any) => handleError("getAllClocks", err));
   };
 }
 
