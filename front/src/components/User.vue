@@ -7,7 +7,7 @@
           :action="param.action"
           :apiCallEvent="param.apiCallEvent"
           :inputs="param.inputs"
-          @api-call="(s) => handleCall(param, s)"
+          @api-call="(formData) => handleCall(param, formData)"
         />
       </div>
     </div>
@@ -114,14 +114,13 @@ export default Vue.extend({
     ...mapState(["currentUser"]),
   },
   methods: {
-    handleCall: async function (param: any, s: any) {
+    handleCall: async function (param: any, formData: any) {
       const { eventHandler } = param;
       // Rebinds this to the component => was lost because of the arrow function in template!
       const vm: any = this;
-      await (vm[eventHandler] || (() => {}))(s);
+      await (vm[eventHandler] || (() => {}))(formData); // empty func just to be safe
     },
-    getUser: async function (state: any) {
-      const { userID: id } = state;
+    getUser: async function ({ userID: id }: { userID: number }) {
       const { data } = (await api.getUser(id)) || {};
       if (data) this.$store.commit("setUser", data);
       this.jsonData = data;
@@ -183,18 +182,24 @@ export default Vue.extend({
 }
 
 .card {
-  /* Add shadows to create the "card" effect */
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
-  padding: 16px;
-  text-align: center;
-  background-color: #f1f1f1;
-  transition: 0.3s;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+  &-form,
+  &-result {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
+    padding: 16px;
+    text-align: center;
+    background-color: #f7f7f7;
+    transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 
-  &:hover {
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    &:hover {
+      box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  &-result {
+    margin: 0 16px;
   }
 }
 
@@ -240,5 +245,8 @@ button[type="button"] {
 pre {
   white-space: pre-wrap;
   text-align: left;
+  font-size: large;
+  color: #2c3e50;
+  padding: 0 16px;
 }
 </style>

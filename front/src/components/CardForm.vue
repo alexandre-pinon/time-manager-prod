@@ -1,13 +1,14 @@
 <template>
-  <div class="card">
+  <div class="card-form">
     <h3>{{ title }}</h3>
     <template v-for="(input, index) in inputs">
       <div :key="index">
         <label :for="input.name">{{ input.label }}</label>
-        <input v-model="stateInputs[input.name]" type="text" :id="input.name" />
+        <input v-model="formData[input.name]" type="text" :id="input.name" />
       </div>
     </template>
-    <button type="button" @click="$emit('api-call', stateInputs)">
+    <div class="flexible"></div>
+    <button type="button" @click="$emit('api-call', formData)">
       {{ action }}
     </button>
   </div>
@@ -33,7 +34,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      stateInputs: { userID: null, username: "", email: "" },
+      formData: { userID: null, username: "", email: "" },
     };
   },
 });

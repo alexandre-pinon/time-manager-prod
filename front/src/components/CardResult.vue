@@ -1,9 +1,7 @@
 <template>
-  <div class="card">
+  <div class="card-result">
     <h3>RESPONSE</h3>
-    <pre>
-        {{ jsonData | pretty }}
-    </pre>
+    <pre>{{ jsonData | pretty }}</pre>
   </div>
 </template>
 
