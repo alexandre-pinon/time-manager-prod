@@ -8,7 +8,7 @@
       </div>
     </template>
     <div class="flexible"></div>
-    <button type="button" @click="$emit('api-call', formData)">
+    <button type="button" @click="handleSubmit()">
       {{ action }}
     </button>
   </div>
@@ -36,6 +36,12 @@ export default Vue.extend({
     return {
       formData: { userID: null, username: "", email: "" },
     };
+  },
+  methods: {
+    handleSubmit: function () {
+      this.$emit("api-call", this.formData);
+      this.formData = { userID: null, username: "", email: "" };
+    },
   },
 });
 </script>

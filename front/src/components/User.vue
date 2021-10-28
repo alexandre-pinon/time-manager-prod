@@ -24,6 +24,7 @@ import Vue from "vue";
 import { mapState } from "vuex";
 import api from "@/utils/api";
 import { CardForm, CardResult } from "@/components";
+import _ from "lodash";
 
 export default Vue.extend({
   name: "tm-user",
@@ -120,28 +121,32 @@ export default Vue.extend({
       const vm: any = this;
       await (vm[eventHandler] || (() => {}))(formData); // empty func just to be safe
     },
-    getUser: async function ({ userID: id }: { userID: number }) {
+    getUser: async function (formData: any) {
+      const { userID: id }: { userID: number } = formData;
       const { data } = (await api.getUser(id)) || {};
       if (data) this.$store.commit("setUser", data);
       this.jsonData = data;
       return data;
     },
-    createUser: async function (username: string, email: string) {
+    createUser: async function (formData: any) {
+      const { username, email }: { username: string; email: string } = formData;
       const { data } = (await api.createUser(username, email)) || {};
       this.jsonData = data;
       return data;
     },
-    updateUser: async function (id: number, user: any) {
-      user = Object.fromEntries(Object.entries(user).filter(([_, v]) => !!v));
+    updateUser: async function (formData: any) {
+      const user = _(formData).omitBy(_.isNil).omitBy(_.isEmpty).value();
+      const { userID: id } = user;
       const { data } = (await api.updateUser(id, user)) || {};
       this.jsonData = data;
       return data;
     },
-    deleteUser: async function (id: number) {
+    deleteUser: async function (formData: any) {
+      const { userID: id }: { userID: number } = formData;
       const { currentUser } = this;
       await api.deleteUser(id);
       if (id === currentUser?.id) this.$store.commit("setUser", {});
-      this.jsonData = { message: "OK" };
+      this.jsonData = { message: `Deleted user n°${id}` };
     },
   },
 });

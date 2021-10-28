@@ -14,7 +14,7 @@ import { mapState } from "vuex";
 export default Vue.extend({
   name: "tm-card-form",
   props: {
-    jsonData: { type: Object, default: {} },
+    jsonData: { type: Object, default: function () {return {}} },
   },
   computed: {
     ...mapState(["currentUser"]),
