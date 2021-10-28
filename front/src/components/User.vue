@@ -28,9 +28,9 @@ export default Vue.extend({
       return data;
     },
     deleteUser: async function (id: number) {
-      const { data } = (await api.deleteUser(id)) || {};
-      if (data) this.$store.commit("setUser", {});
-      return data;
+      const { currentUser } = this;
+      await api.deleteUser(id);
+      if (id === currentUser?.id) this.$store.commit("setUser", {});
     },
     getUser: async function (id: number) {
       const { data } = (await api.getUser(id)) || {};

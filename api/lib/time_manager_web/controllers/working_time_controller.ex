@@ -26,6 +26,11 @@ defmodule TimeManagerAPIWeb.WorkingTimeController do
     render(conn, "index.json", workingtimes: workingtimes)
   end
 
+  def index(conn, _params) do
+    workingtimes = TimeManagerData.list_workingtimes()
+    render(conn, "index.json", workingtimes: workingtimes)
+  end
+
   def create(conn, %{"working_time" => working_time_params, "userID" => userID}) do
     working_time_params = Map.put(working_time_params, "user_id", userID)
 

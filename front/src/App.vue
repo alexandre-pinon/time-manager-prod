@@ -7,15 +7,22 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { store } from "@/store/store";
-// import HelloWorld from "./components/HelloWorld.vue";
+import VueRouter from "vue-router";
+import Vuex from "vuex";
+
+import { store } from "@/store";
+import { router } from "@/router";
+
 import { User } from "@/components";
+
+Vue.use(Vuex);
+Vue.use(VueRouter);
 
 export default Vue.extend({
   name: "App",
   store,
+  router,
   components: {
-    // HelloWorld,
     User,
   },
 });

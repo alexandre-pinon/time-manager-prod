@@ -136,6 +136,10 @@ defmodule TimeManagerAPI.TimeManagerData do
     Repo.all(from c in Clock, where: c.user_id == ^userID)
   end
 
+  def list_clocks do
+    Repo.all(Clock)
+  end
+
   @doc """
   Gets a single clock.
 
@@ -261,6 +265,10 @@ defmodule TimeManagerAPI.TimeManagerData do
     WorkingTime
     |> where(user_id: ^userID)
     |> Repo.all()
+  end
+
+  def list_workingtimes do
+    Repo.all(WorkingTime)
   end
 
   @doc """
