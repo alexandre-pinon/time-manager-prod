@@ -18,5 +18,6 @@ defmodule TimeManagerAPI.TimeManagerData.User do
     |> validate_required([:username, :email])
     |> validate_format(:email, @mail_regex)
     |> unique_constraint(:email)
+    |> unique_constraint(:username)
   end
 end

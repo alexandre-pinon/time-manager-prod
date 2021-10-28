@@ -17,5 +17,6 @@ defmodule TimeManagerAPI.TimeManagerData.Clock do
     |> cast(attrs, [:time, :status, :user_id])
     |> validate_required([:time, :status, :user_id])
     |> foreign_key_constraint(:user_id)
+    |> unique_constraint(:user_id)
   end
 end

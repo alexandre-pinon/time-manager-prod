@@ -9,11 +9,23 @@ import {
 } from "@/components";
 
 const routes: Array<any> = [
-  { path: "/workingtimes/:userId", component: WorkingTimes },
-  { path: "/workingtime/:userId/", component: WorkingTime },
-  { path: "/workingtime/:userId/:workingTimeId", component: WorkingTime },
-  { path: "/clock/:username", component: ClockManager },
-  { path: "/chartmanager/:userId", component: ChartManager },
+  {
+    path: "/workingtimes/:userId",
+    component: WorkingTimes,
+    name: "WorkingTimes",
+  },
+  {
+    path: "/workingtime/:userId/",
+    component: WorkingTime,
+    name: "UserWorkingTime",
+  },
+  {
+    path: "/workingtime/:userId/:workingTimeId",
+    component: WorkingTime,
+    name: "WorkingTime",
+  },
+  { path: "/clock/:username", component: ClockManager, name: "Clock" },
+  { path: "/chartmanager/:userId", component: ChartManager, name: "Charts" },
 ];
 
 export const router = new VueRouter({ routes });
