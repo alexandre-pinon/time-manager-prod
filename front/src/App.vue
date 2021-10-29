@@ -2,21 +2,24 @@
   <div id="app" class="application">
     <!-- <img alt="Vue logo" src="./assets/logo.png" /> -->
     <User />
+    <p>{{allWorkingTimes.data}}</p>
+    <Chart chart-id="chart-times" :chart-key="(allWorkingTimes || []).length" :data="computedWTData" :options="chartOptions" />
+
     <div class="container">
-      <div class="chart-wrapper">
-        <Chart
+      <div class="chart-wrapper" >
+        <Chart style="width: 80%"
           chart-id="chart-bar"
           type="bar"
           :data="chartData"
           :options="chartOptions"
         />
-        <Chart
+        <Chart style="width: 80%"
           chart-id="chart-line"
           type="line"
           :data="lineChartData"
           :options="chartOptions"
         />
-        <Chart
+        <Chart style="width: 80%"
           chart-id="chart-pie"
           type="pie"
           :data="chartData"
@@ -30,9 +33,12 @@
 <script lang="ts">
 import Vue from "vue";
 import VueRouter from "vue-router";
+import moment from "moment";
+import _ from "lodash";
 
 import { store } from "@/store";
 import { router } from "@/router";
+import api from "@/utils/api.ts";
 
 import { User, Chart } from "@/components";
 
@@ -48,6 +54,7 @@ export default Vue.extend({
   },
   data() {
     return {
+      allWorkingTimes:[],
       chartData: {
         labels: ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"],
         datasets: [
@@ -110,6 +117,37 @@ export default Vue.extend({
       },
     };
   },
+  created() {
+    // this.loadWorkingTimes = _.debounce(this.loadWorkingTimes, 300);
+    this.loadWorkingTimes();
+  },
+  watch: {
+    computedWTData: function (val: any) {console.log(this.allWorkingTimes, {val})},
+  },
+  methods: {
+    async loadWorkingTimes() {
+      this.$set(this, "allWorkingTimes", []);
+      const WT = await api.getAllWorkingTimes();
+      this.$set(this, "allWorkingTimes", WT);
+    },
+  },
+  computed: {
+    computedWTData() {
+      const {allWorkingTimes} = this;
+      return {
+        labels: ((allWorkingTimes as Record<string, any>).data || []).map((wt: any) => wt.id),
+        datasets: [
+          {
+            label: "working time",
+            data: ((allWorkingTimes as Record<string, any>).data || []).map((wt: any) => moment(wt.end).diff(moment(wt.start), "hours")),
+            backgroundColor: "rgba(71, 183,132,.5)",
+            borderColor: "#47b784",
+            borderWidth: 3,
+          },
+        ],
+      };
+    }
+  }
 });
 </script>
 
@@ -127,7 +165,8 @@ div.application {
     width: 80%;
 
     .chart-wrapper {
-      max-width: 50%;
+      align-items: baseline;
+      display: flex;
       margin: auto;
 
       * {
