@@ -10,6 +10,7 @@
   "dependencies": {
     "@types/lodash": "^4.14.176",
     "axios": "^0.24.0",
+    "chart.js": "^3.6.0",
     "core-js": "^3.6.5",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
