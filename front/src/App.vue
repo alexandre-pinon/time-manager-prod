@@ -4,10 +4,12 @@
     <router-link to="/">Home</router-link>
     <router-link to="/workingtimes/:userId">Go to Bar</router-link>
     <router-link to="/workingtime/:userId">Go to Bar</router-link>
-    <router-link to="/workingtime/:userId/:workingTimeId">Go to Bar</router-link>
+    <router-link to="/workingtime/:userId/:workingTimeId"
+      >Go to Bar</router-link
+    >
     <User />
     <router-view></router-view>
-    <!-- <div class="container">
+    <div class="container">
       <div class="chart-wrapper">
         <Chart
           chart-id="chart-bar"
@@ -28,7 +30,7 @@
           :options="chartOptions"
         />
       </div>
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -38,6 +40,7 @@ import VueRouter from "vue-router";
 
 import { store } from "@/store";
 import { router } from "@/router";
+import { generateChartData, chartOptions } from "@/utils/charts";
 
 import { User, Chart } from "@/components";
 
@@ -53,7 +56,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      chartData: {
+      chartData2: {
         labels: ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"],
         datasets: [
           {
@@ -65,7 +68,12 @@ export default Vue.extend({
           },
         ],
       },
-      lineChartData: {
+      chartData: generateChartData(
+        { "working time": [6, 5, 8, 9, 7.5] },
+        ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"],
+        ["rgba(71, 183,132,.5)"]
+      ),
+      lineChartData2: {
         labels: ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"],
         datasets: [
           {
@@ -84,21 +92,16 @@ export default Vue.extend({
           },
         ],
       },
-      chartOptions: {
-        responsive: true,
-        lineTension: 1,
-        scales: {
-          yAxes: [
-            {
-              ticks: {
-                beginAtZero: true,
-                padding: 25,
-              },
-            },
-          ],
+      lineChartData: generateChartData(
+        {
+          "working time target": [7, 7, 7, 7, 7],
+          "working time": [6, 5, 8, 9, 7.5],
         },
-      },
-      pieChartData: {
+        ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"],
+        ["rgba(54,73,93,.5)", "rgba(71, 183,132,.5)"],
+        { borderWidth: 2 }
+      ),
+      pieChartData2: {
         labels: ["7h30, 8h, 8h30, 9h, 9h30"],
         dataset: [
           {
@@ -113,6 +116,13 @@ export default Vue.extend({
         ],
         hoverOffset: 4,
       },
+      pieChartData: generateChartData(
+        { "heures d'arrivée": [300, 50, 200, 75, 100] },
+        ["7h30, 8h, 8h30, 9h, 9h30"],
+        ["rgba(255, 99, 132, 1)"],
+        { hoverOffset: 4 }
+      ),
+      chartOptions,
     };
   },
 });
