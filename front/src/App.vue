@@ -2,19 +2,19 @@
   <div id="app" class="application">
     <!-- <img alt="Vue logo" src="./assets/logo.png" /> -->
     <User />
-    <ExampleChart
-      chart-id="chart-example"
+    <Chart
+      chart-id="chart-bar"
       type="bar"
       :data="chartData"
       :options="chartOptions"
     />
-    <LineChart
+    <Chart
       chart-id="chart-line"
       type="line"
       :data="lineChartData"
       :options="chartOptions"
     />
-    <PieChart
+    <Chart
       chart-id="chart-pie"
       type="pie"
       :data="chartData"
@@ -30,8 +30,7 @@ import VueRouter from "vue-router";
 import { store } from "@/store";
 import { router } from "@/router";
 
-import { User, ExampleChart, LineChart } from "@/components";
-import PieChart from "./components/PieChart.vue";
+import { User, Chart } from "@/components";
 
 Vue.use(VueRouter);
 
@@ -39,6 +38,10 @@ export default Vue.extend({
   name: "App",
   store,
   router,
+  components: {
+    User,
+    Chart,
+  },
   data() {
     return {
       chartData: {
@@ -102,12 +105,6 @@ export default Vue.extend({
         hoverOffset: 4,
       },
     };
-  },
-  components: {
-    User,
-    ExampleChart,
-    LineChart,
-    PieChart,
   },
 });
 </script>
