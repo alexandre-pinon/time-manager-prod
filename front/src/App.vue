@@ -1,8 +1,13 @@
 <template>
   <div id="app" class="application">
     <!-- <img alt="Vue logo" src="./assets/logo.png" /> -->
+    <router-link to="/">Home</router-link>
+    <router-link to="/workingtimes/:userId">Go to Bar</router-link>
+    <router-link to="/workingtime/:userId">Go to Bar</router-link>
+    <router-link to="/workingtime/:userId/:workingTimeId">Go to Bar</router-link>
     <User />
-    <div class="container">
+    <router-view></router-view>
+    <!-- <div class="container">
       <div class="chart-wrapper">
         <Chart
           chart-id="chart-bar"
@@ -23,7 +28,7 @@
           :options="chartOptions"
         />
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 

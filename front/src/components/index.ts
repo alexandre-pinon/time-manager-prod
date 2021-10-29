@@ -1,6 +1,6 @@
 import User from './User.vue'
-// import WorkingTimes from './WorkingTimes.vue'
-// import WorkingTime from './WorkingTime.vue'
+import WorkingTimes from './WorkingTimes.vue'
+import WorkingTime from './WorkingTime.vue'
 // import ClockManager from './ClockManager.vue'
 // import ChartManager from './ChartManager.vue'
 import Chart from './Chart.vue'
@@ -13,8 +13,8 @@ export {
   CardForm,
   CardResult,
   User,
-  // WorkingTimes,
-  // WorkingTime,
+  WorkingTimes,
+  WorkingTime,
   // ClockManager,
   // ChartManager,
   Chart,
