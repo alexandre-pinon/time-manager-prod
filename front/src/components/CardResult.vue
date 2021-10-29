@@ -12,7 +12,7 @@ import Vue from "vue";
 import { mapState } from "vuex";
 
 export default Vue.extend({
-  name: "tm-card-form",
+  name: "tm-card-result",
   props: {
     jsonData: { type: Object, default: function () {return {}} },
   },

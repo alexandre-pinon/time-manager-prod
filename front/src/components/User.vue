@@ -23,7 +23,8 @@
 import Vue from "vue";
 import { mapState } from "vuex";
 import api from "@/utils/api";
-import { CardForm, CardResult } from "@/components";
+import CardForm from "./CardForm.vue";
+import CardResult from "./CardResult.vue";
 import _ from "lodash";
 
 export default Vue.extend({
@@ -158,11 +159,6 @@ export default Vue.extend({
 }
 /* Remove extra left and right margins, due to padding in columns */
 
-.container {
-  margin: auto;
-  width: 80%;
-}
-
 .row {
   display: flex;
   flex-direction: row;
@@ -178,11 +174,15 @@ export default Vue.extend({
   padding: 0 16px;
 }
 
+@media screen and (max-width: 992px) {
+  .column {
+    width: 50%;
+    margin-bottom: 20px;
+  }
+}
 @media screen and (max-width: 600px) {
   .column {
     width: 100%;
-    display: block;
-    margin-bottom: 20px;
   }
 }
 
