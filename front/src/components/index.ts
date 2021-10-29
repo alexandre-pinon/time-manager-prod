@@ -5,6 +5,7 @@ import User from "./User.vue";
 // import ChartManager from "./ChartManager.vue";
 
 import ExampleChart from "./ExampleChart.vue";
+import LineChart from "./LineChart.vue"
 
 export {
   User,
@@ -13,4 +14,5 @@ export {
   // ClockManager,
   // ChartManager,
   ExampleChart,
+  LineChart
 };
