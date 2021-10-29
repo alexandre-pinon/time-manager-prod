@@ -2,24 +2,28 @@
   <div id="app" class="application">
     <!-- <img alt="Vue logo" src="./assets/logo.png" /> -->
     <User />
-    <Chart
-      chart-id="chart-bar"
-      type="bar"
-      :data="chartData"
-      :options="chartOptions"
-    />
-    <Chart
-      chart-id="chart-line"
-      type="line"
-      :data="lineChartData"
-      :options="chartOptions"
-    />
-    <Chart
-      chart-id="chart-pie"
-      type="pie"
-      :data="chartData"
-      :options="chartOptions"
-    />
+    <div class="container">
+      <div class="chart-wrapper">
+        <Chart
+          chart-id="chart-bar"
+          type="bar"
+          :data="chartData"
+          :options="chartOptions"
+        />
+        <Chart
+          chart-id="chart-line"
+          type="line"
+          :data="lineChartData"
+          :options="chartOptions"
+        />
+        <Chart
+          chart-id="chart-pie"
+          type="pie"
+          :data="chartData"
+          :options="chartOptions"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -117,6 +121,19 @@ div.application {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
-  width: 50%;
+
+  .container {
+    margin: auto;
+    width: 80%;
+
+    .chart-wrapper {
+      max-width: 50%;
+      margin: auto;
+
+      * {
+        margin: 30px 0;
+      }
+    }
+  }
 }
 </style>

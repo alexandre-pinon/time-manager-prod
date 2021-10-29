@@ -1,5 +1,5 @@
 <template>
-  <div class="chart-wrapper">
+  <div class="chart">
     <canvas :id="chartId" />
   </div>
 </template>
