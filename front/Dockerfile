@@ -1,23 +1,37 @@
-FROM node:lts-alpine
+FROM node:lts-alpine as build-stage
 
-# install simple http server for serving static content
-RUN npm install -g http-server
+# install JQ to replace config.json values
+ENV JQ_VERSION=1.6
+
+RUN wget --no-check-certificate https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/jq-linux64 -O /tmp/jq-linux64
+
+RUN cp /tmp/jq-linux64 /usr/bin/jq
+
+RUN chmod +x /usr/bin/jq
 
 # make the 'app' folder the current working directory
 WORKDIR /app
 
-# copy both 'package.json' and 'package-lock.json' (if available)
-COPY package*.json .
-
-# install project dependencies
-RUN npm install
-
 # copy project files and folders to the current working directory (i.e. 'app' folder)
 COPY . .
 
-# build app for production with minification
-RUN npm run build
+RUN jq 'to_entries | map_values({ (.key) : ("$" + .key) }) | reduce .[] as $item ({}; . + $item)' ./src/config.json > ./src/config.tmp.json && mv ./src/config.tmp.json ./src/config.json
 
-EXPOSE 8080
+# install project dependencies & build app for production with minification
+RUN npm install && npm run build
 
-CMD [ "http-server", "dist" ]
+
+
+FROM nginx:1.17 as production-stage
+
+ENV JSFOLDER=/usr/share/nginx/html/js/app.*.js
+
+COPY ./entrypoint.sh /usr/bin/entrypoint.sh
+
+RUN chmod +x /usr/bin/entrypoint.sh
+
+WORKDIR /usr/share/nginx/html
+
+COPY --from=build-stage /app/dist .
+
+CMD [ "entrypoint.sh" ]
