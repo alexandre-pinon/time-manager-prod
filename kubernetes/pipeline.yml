@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-deployment
+  labels:
+    app: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+        - name: api
+          image: europe-west1-docker.pkg.dev/timemanager-330510/pr-ftw-repo/time-manager-api
+          ports:
+            - containerPort: 4000
+          env:
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: psql-secret
+                  key: psql-username
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: psql-secret
+                  key: psql-password
+            - name: PGDATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: psql-config
+                  key: psql-database
+            - name: PGPORT
+              valueFrom:
+                configMapKeyRef:
+                  name: psql-config
+                  key: psql-port
+            - name: PGHOST
+              valueFrom:
+                configMapKeyRef:
+                  name: psql-config
+                  key: psql-host
+          resources:
+            requests:
+              memory: 512Mi
+              cpu: 125m
+            limits:
+              memory: 512Mi
+              cpu: 250m
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front-deployment
+  labels:
+    app: front
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: front
+  template:
+    metadata:
+      labels:
+        app: front
+    spec:
+      containers:
+        - name: front
+          image: europe-west1-docker.pkg.dev/timemanager-330510/pr-ftw-repo/time-manager-front
+          ports:
+            - containerPort: 80
+          env:
+            - name: API_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: api-config
+                  key: api-host
+            - name: API_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: api-config
+                  key: api-port
+          resources:
+            requests:
+              memory: 512Mi
+              cpu: 125m
+            limits:
+              memory: 512Mi
+              cpu: 250m
