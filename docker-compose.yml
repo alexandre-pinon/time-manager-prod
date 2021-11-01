@@ -5,8 +5,11 @@ services:
     build:
       context: front
     image: time-manager-front
+    environment:
+      API_HOST: localhost
+      API_PORT: 4001
     ports:
-      - 8080:8080
+      - 80:80
     depends_on:
       - api
 

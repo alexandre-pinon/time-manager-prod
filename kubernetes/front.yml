@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front-deployment
+  labels:
+    app: front
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: front
+  template:
+    metadata:
+      labels:
+        app: front
+    spec:
+      containers:
+        - name: front
+          image: europe-west1-docker.pkg.dev/timemanager-330510/pr-ftw-repo/time-manager-front:1.0
+          ports:
+            - containerPort: 80
+          env:
+            - name: API_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: api-config
+                  key: api-host
+            - name: API_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: api-config
+                  key: api-port
+          resources:
+            requests:
+              memory: 512Mi
+              cpu: 125m
+            limits:
+              memory: 512Mi
+              cpu: 250m
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: front-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: front
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

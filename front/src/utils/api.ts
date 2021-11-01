@@ -4,6 +4,7 @@ import _ from "lodash";
 import moment from "moment";
 
 import { handleError } from "@/utils/helpers";
+import config from "../config.json";
 
 class API {
   url = "http://localhost";
@@ -187,5 +188,5 @@ class API {
   };
 }
 
-const api = new API();
+const api = process.env.NODE_ENV === 'production' ? new API(`http://${config.API_HOST}`, config.API_PORT) : new API();
 export default api;

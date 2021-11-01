@@ -1,0 +1,50 @@
+steps:
+  # Docker Build
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/${_API_IMAGE_NAME}",
+        "../api",
+      ]
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/${_FRONT_IMAGE_NAME}",
+        "../front",
+      ]
+
+  # Docker Push
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "push",
+        "-image",
+        "${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/${_API_IMAGE_NAME}",
+      ]
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "push",
+        "-image",
+        "${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/${_FRONT_IMAGE_NAME}",
+      ]
+
+  # deploy container image to GKE
+  - name: "gcr.io/cloud-builders/gke-deploy"
+    args:
+      - run
+      - --filename=${_PIPELINE_PATH}
+      - --location=${_LOCATION}
+      - --cluster=${_CLUSTER_NAME}
+
+substitutions:
+  _PIPELINE_PATH: pipeline.yml
+  _CLUSTER_NAME: pr-ftw-cluster
+  _LOCATION: europe-west1
+  _ARTIFACT_REPO: pr-ftw-repo
+  _API_IMAGE_NAME: time-manager-api
+  _FRONT_IMAGE_NAME: time-manager-front
