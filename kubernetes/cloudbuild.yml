@@ -5,16 +5,16 @@ steps:
       [
         "build",
         "-t",
-        "${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/${_API_IMAGE_NAME}",
-        "../api",
+        "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPO}/${_API_IMAGE_NAME}:${_TAG}",
+        "api",
       ]
   - name: "gcr.io/cloud-builders/docker"
     args:
       [
         "build",
         "-t",
-        "${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/${_FRONT_IMAGE_NAME}",
-        "../front",
+        "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPO}/${_FRONT_IMAGE_NAME}:${_TAG}",
+        "front",
       ]
 
   # Docker Push
@@ -22,15 +22,13 @@ steps:
     args:
       [
         "push",
-        "-image",
-        "${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/${_API_IMAGE_NAME}",
+        "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPO}/${_API_IMAGE_NAME}:${_TAG}",
       ]
   - name: "gcr.io/cloud-builders/docker"
     args:
       [
         "push",
-        "-image",
-        "${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REPO}/${_FRONT_IMAGE_NAME}",
+        "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPO}/${_FRONT_IMAGE_NAME}:${_TAG}",
       ]
 
   # deploy container image to GKE
@@ -42,9 +40,10 @@ steps:
       - --cluster=${_CLUSTER_NAME}
 
 substitutions:
-  _PIPELINE_PATH: pipeline.yml
+  _PIPELINE_PATH: kubernetes/pipeline.yml
   _CLUSTER_NAME: pr-ftw-cluster
   _LOCATION: europe-west1
   _ARTIFACT_REPO: pr-ftw-repo
   _API_IMAGE_NAME: time-manager-api
   _FRONT_IMAGE_NAME: time-manager-front
+  _TAG: "1.0"
