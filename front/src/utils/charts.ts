@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import _ from "lodash";
+import { hexToRGB } from "./helpers";
 
 export const generateChartData = function (
   series: Record<string, Array<number>> = {},
@@ -18,7 +19,10 @@ export const generateChartData = function (
         colors?.length > 1
           ? colors[_.keys(series).indexOf(key)] || "rgba(71, 183,132,.5)"
           : colors[0];
-      const borderColor = `rgba(${_.trimStart(_.trimEnd(color, ")"), "rgba(")
+      const borderColor = `rgba(${_.trimStart(
+        _.trimEnd(color[0] === "#" ? hexToRGB(color, "1") : color, ")"),
+        "rgba("
+      )
         .split(",")
         .map((val: any, idx: number) => Math.max(idx < 3 ? +val / 1.25 : 1, 0))
         .join(",")})`;
@@ -26,6 +30,7 @@ export const generateChartData = function (
       return {
         label: key,
         data: val,
+        color: chartColors.textColor,
         backgroundColor: color,
         borderColor,
         borderWidth: 3,
@@ -36,17 +41,44 @@ export const generateChartData = function (
   };
 };
 
+export const chartColors = {
+  appColor: "#2B4162",
+  layerColor: "#385F71",
+  borderColor: "#518AA4",
+  textColor: "#F5F0F6",
+  accentColor: "#49A078",
+  hoverColor: "#81D986",
+};
+
 export const chartOptions = {
   responsive: true,
+  maintainAspectRatio: false,
   lineTension: 1,
-  scales: {
-    yAxes: [
-      {
-        ticks: {
-          beginAtZero: true,
-          padding: 25,
-        },
+  plugins: {
+    legend: {
+      labels: {
+        color: chartColors.textColor,
       },
-    ],
+    },
+  },
+  scales: {
+    y: {
+      grid: {
+        color: chartColors.borderColor,
+      },
+      ticks: {
+        color: chartColors.textColor,
+        beginAtZero: true,
+        padding: 25,
+      },
+    },
+    x: {
+      grid: {
+        color: chartColors.borderColor,
+      },
+      ticks: {
+        color: chartColors.textColor,
+      },
+    },
   },
 };

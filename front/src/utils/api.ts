@@ -179,5 +179,8 @@ class API {
   };
 }
 
-const api = process.env.NODE_ENV === 'production' ? new API(`http://${config.API_HOST}`, config.API_PORT) : new API();
+const api =
+  process.env.NODE_ENV === "production"
+    ? new API(`http://${config.API_HOST}`, config.API_PORT)
+    : new API();
 export default api;
