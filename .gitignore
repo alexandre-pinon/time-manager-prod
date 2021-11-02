@@ -1,7 +1,7 @@
 .elixir_ls
 # The directory Mix will write compiled artifacts to.
 bootstrap/todo-list/_build/
-
+.idea
 # If you run "mix test --cover", coverage assets end up here.
 bootstrap/todo-list/cover/
 
@@ -22,6 +22,7 @@ erl_crash.dump
 
 # Ignore package tarball (built via "mix hex.build").
 bootstrap-*.tar
+**/.env
 */.env
 
 /kubernetes/*service-account.*json

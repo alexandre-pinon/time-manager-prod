@@ -47,7 +47,7 @@ class API {
       .then((result: any) => result?.data)
       .catch((err: any) => handleError("getUser", err));
   };
-  getUsers = async (): Promise<any> => {
+  getAllUsers = async (): Promise<any> => {
     const { url } = this;
     console.log("getUsers");
     return await axios
@@ -57,14 +57,14 @@ class API {
   };
 
   createWorkingTime = async (
-    id: number, // user ID, not working time ID
+    userId: number,
     start: string,
     end: string
   ): Promise<any> => {
     const { url } = this;
-    console.log("createWorkingTime : ", id, start, end);
+    console.log("createWorkingTime : ", userId, start, end);
     return await axios
-      .post(`${url}/workingtimes/${id}`, {
+      .post(`${url}/workingtimes/${userId}`, {
         working_time: {
           start: moment(start).format("YYYY-MM-DD HH:mm:ss"),
           end: moment(end).format("YYYY-MM-DD HH:mm:ss"),
@@ -89,21 +89,21 @@ class API {
       .then((result: any) => result?.data)
       .catch((err: any) => handleError("deleteWorkingTime", err));
   };
-  getWorkingTime = async (id: number): Promise<any> => {
+  getWorkingTime = async (userId: number, id: number): Promise<any> => {
     const { url } = this;
-    console.log("getWorkingTime : ", id);
+    console.log("getWorkingTime : ", userId, id);
     return await axios
-      .get(`${url}/workingtimes/${id}`)
+      .get(`${url}/workingtimes/${userId}/${id}`)
       .then((result: any) => result?.data)
       .catch((err: any) => handleError("getWorkingTime", err));
   };
   getWorkingTimes = async (
-    id: number, // user ID, not working time ID
+    userId: number,
     start: any = undefined,
     end: any = undefined
   ): Promise<any> => {
     const { url } = this;
-    console.log("getWorkingTimes : ", id, start, end);
+    console.log("getWorkingTimes : ", userId, start, end);
     // params here is directly stringified as needed by the API
     // > _.omitBy(...) removes all values from an object for which the callback returns true
     //    * in this case, it removes start, end, or both depending on which is undefined
@@ -118,7 +118,7 @@ class API {
           ).join("&")
         : "";
     return await axios
-      .get(`${url}/workingtimes/users/${id}${params}`)
+      .get(`${url}/workingtimes/users/${userId}${params}`)
       .then((result: any) => result?.data)
       .catch((err: any) => handleError("getWorkingTimes", err));
   };
@@ -132,14 +132,14 @@ class API {
   };
 
   createClock = async (
-    id: number, // user ID, not clock ID
+    userId: number,
     time: string,
     status: boolean
   ): Promise<any> => {
     const { url } = this;
-    console.log("createClock : ", id, time, status);
+    console.log("createClock : ", userId, time, status);
     return await axios
-      .post(`${url}/clocks/${id}`, {
+      .post(`${url}/clocks/${userId}`, {
         clock: { time: moment(time).format("YYYY-MM-DD HH:mm:ss"), status },
       })
       .then((result: any) => result?.data)
@@ -161,22 +161,13 @@ class API {
       .then((result: any) => result?.data)
       .catch((err: any) => handleError("deleteClock", err));
   };
-  getClock = async (id: number): Promise<any> => {
+  getClock = async (userId: number): Promise<any> => {
     const { url } = this;
-    console.log("getClock : ", id);
+    console.log("getClock : ", userId);
     return await axios
-      .get(`${url}/clocks/${id}`)
+      .get(`${url}/clocks/${userId}`)
       .then((result: any) => result?.data)
       .catch((err: any) => handleError("getClock", err));
-  };
-  getClocks = async (id: number): Promise<any> => {
-    // user ID, not clock ID
-    const { url } = this;
-    console.log("getClocks : ", id);
-    return await axios
-      .get(`${url}/clocks/users/${id}`)
-      .then((result: any) => result?.data)
-      .catch((err: any) => handleError("getClocks", err));
   };
   getAllClocks = async (): Promise<any> => {
     const { url } = this;
