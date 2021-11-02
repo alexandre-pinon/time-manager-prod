@@ -1,6 +1,5 @@
 <template>
   <div id="app" class="application">
-    <!-- <img alt="Vue logo" src="./assets/logo.png" /> -->
     <router-link to="/">Home</router-link>
     <router-link to="/workingtimes/:userId">Go to Bar</router-link>
     <router-link to="/workingtime/:userId">Go to Bar</router-link>
@@ -32,7 +31,6 @@
         />
         <Chart
           chart-id="chart-times"
-          :chart-key="(allWorkingTimes || []).length"
           :data="computedWTData"
           :options="chartOptions"
         />
@@ -80,8 +78,7 @@ export default Vue.extend({
           "working time": [6, 5, 8, 9, 7.5],
         },
         ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"],
-        ["rgba(54,73,93,.5)", "rgba(71, 183,132,.5)"],
-        { borderWidth: 2 }
+        ["rgba(54,73,93,.5)", "rgba(71, 183,132,.5)"]
       ),
       pieChartData: generateChartData(
         { "heures d'arrivée": [300, 50, 200, 75, 100] },
@@ -93,7 +90,6 @@ export default Vue.extend({
     };
   },
   created() {
-    // this.loadWorkingTimes = _.debounce(this.loadWorkingTimes, 300);
     this.loadWorkingTimes();
   },
   watch: {
@@ -113,13 +109,13 @@ export default Vue.extend({
       const vm: any = this;
       const { allWorkingTimes } = vm;
       return {
-        labels: ((allWorkingTimes as Record<string, any>).data || []).map(
+        labels: ((allWorkingTimes as Record<string, any>)?.data || []).map(
           (wt: any) => wt.id
         ),
         datasets: [
           {
             label: "working time",
-            data: ((allWorkingTimes as Record<string, any>).data || []).map(
+            data: ((allWorkingTimes as Record<string, any>)?.data || []).map(
               (wt: any) => moment(wt.end).diff(moment(wt.start), "hours")
             ),
             backgroundColor: "rgba(71, 183,132,.5)",

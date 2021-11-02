@@ -267,6 +267,13 @@ defmodule TimeManagerAPI.TimeManagerData do
     |> Repo.all()
   end
 
+  def list_workingtimes!(userID, id) do
+    WorkingTime
+    |> where(user_id: ^userID)
+    |> where(id: ^id)
+    |> Repo.all()
+  end
+
   def list_workingtimes do
     Repo.all(WorkingTime)
   end
