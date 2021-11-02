@@ -26,11 +26,6 @@ defmodule TimeManagerAPIWeb.ClockController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    clock = TimeManagerData.get_clock!(id)
-    render(conn, "show.json", clock: clock)
-  end
-
   def update(conn, %{"id" => id, "clock" => clock_params}) do
     clock = TimeManagerData.get_clock!(id)
 

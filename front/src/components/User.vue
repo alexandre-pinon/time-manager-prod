@@ -19,12 +19,12 @@
 
 <script lang="ts">
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
+/* eslint-disable @typescript-eslint/no-this-alias */
+/* eslint-disable @typescript-eslint/no-empty-function */
 import Vue from "vue";
 import { mapState } from "vuex";
 import api from "@/utils/api";
-import CardForm from "./CardForm.vue";
-import CardResult from "./CardResult.vue";
+import { CardForm, CardResult } from "@/components/forms";
 import _ from "lodash";
 
 export default Vue.extend({
