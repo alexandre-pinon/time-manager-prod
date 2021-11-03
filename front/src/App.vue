@@ -51,7 +51,7 @@ export default Vue.extend({
 
 <style lang="scss">
 html {
-  background: $app-color;
+  background: $color-background;
   ::-webkit-scrollbar {
     display: none;
     width: 0px;
@@ -63,7 +63,7 @@ div.application {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: $text-color;
+  color: $color-text;
   margin-top: 96px;
 
   &-view {
@@ -104,6 +104,16 @@ div.application {
 
   .js-end {
     justify-content: end;
+  }
+
+  // ANCHOR CSS Helpers - Colors
+  .shadow {
+    box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.25);
+  }
+
+  // ANCHOR CSS Helpers - Misc
+  .pointer {
+    cursor: pointer;
   }
 }
 

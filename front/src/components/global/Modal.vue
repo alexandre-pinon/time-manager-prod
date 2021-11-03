@@ -4,8 +4,12 @@
       <slot />
     </div>
     <div class="modal-footer flex js-end">
-      <Button class="modal-button" @click="$emit('close-modal')"> Fermer </Button>
-      <Button class="modal-button" @click="$emit('validate-modal')"> Valider </Button>
+      <Button class="modal-button" negative @click="$emit('close-modal')">
+        Fermer
+      </Button>
+      <Button class="modal-button" @click="$emit('validate-modal')">
+        Valider
+      </Button>
     </div>
   </div>
 </template>
@@ -35,10 +39,10 @@ div.application {
     padding: 16px;
     max-width: 85vw;
     max-height: 85vh;
-    border: 1px solid $border-color;
+    border: 1px solid $color-border;
     border-radius: 4px;
-    background: $layer-color;
-    color: $text-color;
+    background: $color-background;
+    color: $color-text;
     &-footer {
       margin-top: 16px;
     }

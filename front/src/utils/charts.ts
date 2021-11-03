@@ -2,6 +2,63 @@
 import _ from "lodash";
 import { hexToRGB } from "./helpers";
 
+export const chartColors = {
+  appColor: "#1e303c",
+  borderColor: "#374955",
+  textColor: "#e6f4f1",
+  primaryColor: "#008abb",
+  secondaryColor: "#ec9929",
+  tertiaryColor: "#009467",
+  quaternaryColor: "#cf5c5c",
+};
+
+export const chartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  lineTension: 1,
+  plugins: {
+    legend: {
+      labels: {
+        color: chartColors.textColor,
+      },
+    },
+  },
+  scales: {
+    y: {
+      grid: {
+        color: chartColors.borderColor,
+      },
+      ticks: {
+        color: chartColors.textColor,
+        beginAtZero: true,
+        padding: 25,
+      },
+    },
+    x: {
+      grid: {
+        color: chartColors.borderColor,
+      },
+      ticks: {
+        color: chartColors.textColor,
+      },
+    },
+  },
+};
+
+export const generateChartProps = function (
+  type: string,
+  series: Record<string, Array<number>> = {},
+  labels: Array<any> = [],
+  colors: Array<string> = [],
+  opts: Record<string, any> = {}
+): Record<string, any> {
+  return {
+    type,
+    options: chartOptions,
+    data: generateChartData(series, labels, colors, opts),
+  };
+};
+
 export const generateChartData = function (
   series: Record<string, Array<number>> = {},
   labels: Array<any> = [],
@@ -39,46 +96,4 @@ export const generateChartData = function (
     hoverOffset,
     ...restOpts,
   };
-};
-
-export const chartColors = {
-  appColor: "#2B4162",
-  layerColor: "#385F71",
-  borderColor: "#518AA4",
-  textColor: "#F5F0F6",
-  accentColor: "#49A078",
-  hoverColor: "#81D986",
-};
-
-export const chartOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-  lineTension: 1,
-  plugins: {
-    legend: {
-      labels: {
-        color: chartColors.textColor,
-      },
-    },
-  },
-  scales: {
-    y: {
-      grid: {
-        color: chartColors.borderColor,
-      },
-      ticks: {
-        color: chartColors.textColor,
-        beginAtZero: true,
-        padding: 25,
-      },
-    },
-    x: {
-      grid: {
-        color: chartColors.borderColor,
-      },
-      ticks: {
-        color: chartColors.textColor,
-      },
-    },
-  },
 };
