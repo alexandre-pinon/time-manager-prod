@@ -41,7 +41,7 @@ export default Vue.extend({
           apiCallEvent: "get-user",
           inputs: [
             {
-              name: "userID",
+              name: "userId",
               label: "User ID",
             },
           ],
@@ -61,6 +61,7 @@ export default Vue.extend({
             {
               name: "email",
               label: "Email",
+              type: "email",
             },
           ],
           eventHandler: "createUser",
@@ -73,7 +74,7 @@ export default Vue.extend({
           jsonData: "updatedUser",
           inputs: [
             {
-              name: "userID",
+              name: "userId",
               label: "User ID",
             },
             {
@@ -83,6 +84,7 @@ export default Vue.extend({
             {
               name: "email",
               label: "Email",
+              type: "email",
             },
           ],
           eventHandler: "updateUser",
@@ -94,7 +96,7 @@ export default Vue.extend({
           apiCallEvent: "delete-user",
           inputs: [
             {
-              name: "userID",
+              name: "userId",
               label: "User ID",
             },
           ],
@@ -118,27 +120,27 @@ export default Vue.extend({
       await (vm[eventHandler] || (() => {}))(formData); // empty func just to be safe
     },
     getUser: async function (formData: any) {
-      const { userID: id }: { userID: number } = formData;
+      const { userId: id } = formData;
       const { data } = (await api.getUser(id)) || {};
       if (data) this.$store.commit("setUser", data);
       this.jsonData = data;
       return data;
     },
     createUser: async function (formData: any) {
-      const { username, email }: { username: string; email: string } = formData;
+      const { username, email } = formData;
       const { data } = (await api.createUser(username, email)) || {};
       this.jsonData = data;
       return data;
     },
     updateUser: async function (formData: any) {
       const user = _(formData).omitBy(_.isNil).omitBy(_.isEmpty).value();
-      const { userID: id } = user;
+      const { userId: id } = user;
       const { data } = (await api.updateUser(id, user)) || {};
       this.jsonData = data;
       return data;
     },
     deleteUser: async function (formData: any) {
-      const { userID: id }: { userID: number } = formData;
+      const { userId: id } = formData;
       const { currentUser } = this;
       await api.deleteUser(id);
       if (id === currentUser?.id) this.$store.commit("setUser", {});

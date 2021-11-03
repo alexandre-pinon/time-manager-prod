@@ -4,7 +4,11 @@
     <template v-for="(input, index) in inputs">
       <div :key="index">
         <label :for="input.name">{{ input.label }}</label>
-        <input v-model="formData[input.name]" type="text" :id="input.name" />
+        <input
+          v-model="formData[input.name]"
+          :type="input.type || 'text'"
+          :id="input.name"
+        />
       </div>
     </template>
     <div class="flexible"></div>
@@ -34,13 +38,13 @@ export default Vue.extend({
   },
   data() {
     return {
-      formData: { userID: null, username: "", email: "" },
+      formData: {},
     };
   },
   methods: {
     handleSubmit: function () {
       this.$emit("api-call", this.formData);
-      this.formData = { userID: null, username: "", email: "" };
+      this.formData = {};
     },
   },
 });
@@ -62,6 +66,40 @@ export default Vue.extend({
     &:hover {
       box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
     }
+
+    input {
+      width: 100%;
+      padding: 12px 20px;
+      margin: 8px 0;
+      display: inline-block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: white;
+      width: 100%;
+      padding: 14px 20px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #45a049;
+      }
+
+      &[disabled="disabled"] {
+        background-color: rgb(216, 216, 216);
+        color: grey;
+
+        &:hover {
+          background-color: rgb(216, 216, 216);
+        }
+      }
+    }
   }
 
   &-result {
@@ -71,40 +109,5 @@ export default Vue.extend({
 
 .flexible {
   flex-grow: 1;
-}
-
-input[type="text"],
-input[type="email"] {
-  width: 100%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  display: inline-block;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
-button[type="button"] {
-  background-color: #4caf50;
-  color: white;
-  width: 100%;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #45a049;
-  }
-
-  &[disabled="disabled"] {
-    background-color: rgb(216, 216, 216);
-    color: grey;
-
-    &:hover {
-      background-color: rgb(216, 216, 216);
-    }
-  }
 }
 </style>
