@@ -26,14 +26,14 @@ defmodule TimeManagerAPIWeb.WorkingTimeController do
     render(conn, "index.json", workingtimes: workingtimes)
   end
 
-  def index(conn, %{"userID" => userID, "id" => id}) do
-    workingtimes = TimeManagerData.list_workingtimes!(userID, id)
-    render(conn, "index.json", workingtimes: workingtimes)
-  end
-
   def index(conn, _params) do
     workingtimes = TimeManagerData.list_workingtimes()
     render(conn, "index.json", workingtimes: workingtimes)
+  end
+
+  def show(conn, %{"userID" => userID, "id" => id}) do
+    working_time = TimeManagerData.get_working_time!(userID, id)
+    render(conn, "show.json", working_time: working_time)
   end
 
   def create(conn, %{"working_time" => working_time_params, "userID" => userID}) do
@@ -43,7 +43,10 @@ defmodule TimeManagerAPIWeb.WorkingTimeController do
            TimeManagerData.create_working_time(working_time_params) do
       conn
       |> put_status(:created)
-      |> put_resp_header("location", Routes.working_time_path(conn, :show, working_time))
+      |> put_resp_header(
+        "location",
+        Routes.working_time_path(conn, :show, userID, working_time)
+      )
       |> render("show.json", working_time: working_time)
     end
   end
