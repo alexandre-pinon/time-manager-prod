@@ -1,37 +1,37 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import VueRouter from 'vue-router'
+import VueRouter from "vue-router";
 
 import {
   Home,
   WorkingTimes,
   WorkingTime,
   //   ClockManager,
-  //   ChartManager,
-} from '@/components'
+  ChartManager,
+} from "@/components";
 
 const routes: Array<any> = [
   {
-    path: '/',
+    path: "/",
     component: Home,
-    name: 'Home',
+    name: "Home",
   },
   {
-    path: '/workingtimes/:userId',
+    path: "/workingtimes/:userId",
     component: WorkingTimes,
-    name: 'WorkingTimes',
+    name: "WorkingTimes",
   },
   {
-    path: '/workingtime/:userId',
+    path: "/workingtime/:userId",
     component: WorkingTime,
-    name: 'UserWorkingTime',
+    name: "UserWorkingTime",
   },
   {
-    path: '/workingtime/:userId/:workingTimeId',
+    path: "/workingtime/:userId/:workingTimeId",
     component: WorkingTime,
-    name: 'WorkingTime',
+    name: "WorkingTime",
   },
   // { path: "/clock/:username", component: ClockManager, name: "Clock" },
-  // { path: "/chartmanager/:userId", component: ChartManager, name: "Charts" },
-]
+  { path: "/chartmanager/:userId", component: ChartManager, name: "Charts" },
+];
 
-export const router = new VueRouter({ routes })
+export const router = new VueRouter({ routes });

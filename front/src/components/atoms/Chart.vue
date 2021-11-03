@@ -1,7 +1,5 @@
 <template>
-  <div class="chart">
-    <canvas :id="chartId" />
-  </div>
+  <canvas :id="chartId" />
 </template>
 
 <script lang="ts">
@@ -70,5 +68,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style></style>
