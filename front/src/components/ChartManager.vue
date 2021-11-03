@@ -96,10 +96,9 @@ export default Vue.extend({
   },
   methods: {
     async loadWorkingTimes() {
-      const tmpUserId = 1
+      const tmpUserId = 1;
       const WT = await api.getWorkingTimes(tmpUserId);
       this.$set(this, "allWorkingTimes", WT);
-      console.log(this.allWorkingTimes);
     },
   },
 });

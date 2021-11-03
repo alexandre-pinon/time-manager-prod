@@ -1,8 +1,13 @@
 <template>
   <div id="app" class="application">
-    <Navbar />
-    <!-- <User /> -->
+    <Navbar @toggle-user-modal="() => (showUserModal = !showUserModal)" />
     <div class="application-view">
+      <Modal
+        v-show="showUserModal"
+        @close-modal="() => (showUserModal = false)"
+      >
+        <User />
+      </Modal>
       <router-view />
     </div>
   </div>
@@ -17,8 +22,8 @@ import VueRouter from "vue-router";
 import { store } from "@/store";
 import { router } from "@/router";
 
-// import { User } from "@/components";
-import { Navbar } from "@/components";
+import { Navbar, User } from "@/components";
+import { Modal } from "@/components/global";
 
 Vue.use(VueRouter);
 
@@ -27,8 +32,19 @@ export default Vue.extend({
   store,
   router,
   components: {
-    // User,
+    User,
     Navbar,
+    Modal,
+  },
+  data() {
+    return {
+      showUserModal: false,
+    };
+  },
+  watch: {
+    showUserModal(val: any) {
+      console.log({ show: val });
+    },
   },
 });
 </script>
@@ -36,6 +52,11 @@ export default Vue.extend({
 <style lang="scss">
 html {
   background: $app-color;
+  ::-webkit-scrollbar {
+    display: none;
+    width: 0px;
+    background: transparent;
+  }
 }
 div.application {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -61,6 +82,10 @@ div.application {
     flex-wrap: wrap;
   }
 
+  .f-column {
+    flex-direction: column;
+  }
+
   .js-around {
     justify-content: space-around;
   }
@@ -75,6 +100,10 @@ div.application {
 
   .js-center {
     justify-content: center;
+  }
+
+  .js-end {
+    justify-content: end;
   }
 }
 

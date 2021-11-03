@@ -1,3 +1,4 @@
 import Button from "./Button.vue";
+import Modal from "./Modal.vue";
 
-export { Button };
+export { Button, Modal };

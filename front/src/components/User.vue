@@ -22,10 +22,12 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
 /* eslint-disable @typescript-eslint/no-empty-function */
 import Vue from "vue";
+
 import { mapState } from "vuex";
+import _ from "lodash";
+
 import api from "@/utils/api";
 import { CardForm, CardResult } from "@/components/forms";
-import _ from "lodash";
 
 export default Vue.extend({
   name: "tm-user",

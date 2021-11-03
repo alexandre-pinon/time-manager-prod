@@ -1,9 +1,17 @@
 <template>
-  <router-link v-if="to" class="button" :to="to">
-    <slot />
-  </router-link>
-  <div v-else class="button" @click="() => onClick()">
-    <slot />
+  <div
+    :class="{ 'button flex js-center': true, 'button-small': small }"
+    :style="{
+      height: height || small ? '32px' : '48px',
+      'min-width': height || small ? '32px' : '48px',
+    }"
+  >
+    <router-link v-if="to" class="button-content" :to="to">
+      <slot />
+    </router-link>
+    <div v-else class="button-content" @click="() => $emit('click')">
+      <slot />
+    </div>
   </div>
 </template>
 
@@ -14,8 +22,9 @@ import Vue from "vue";
 export default Vue.extend({
   name: "tm-button",
   props: {
-    to: { type: String, default: "" },
-    onClick: { type: Function, default: () => {} },
+    small: Boolean,
+    to: { type: String, default: undefined },
+    height: { type: String, default: "" },
   },
 });
 </script>
@@ -23,13 +32,21 @@ export default Vue.extend({
 <style lang="scss">
 div.application {
   .button {
-    padding: 8px;
     background: $accent-color;
-    color: $text-color;
-    font-weight: bold;
-    font-size: 16pt;
-    text-decoration: none;
-    border-radius: 8px;
+    border-radius: 4px;
+    padding-left: 8px;
+    padding-right: 8px;
+    &.button-small {
+      &-content {
+        font-size: 12pt;
+      }
+    }
+    &-content {
+      color: $text-color;
+      font-weight: bold;
+      font-size: 16pt;
+      text-decoration: none;
+    }
     &:hover {
       background: $hover-color;
     }
