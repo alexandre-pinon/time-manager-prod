@@ -77,4 +77,36 @@ div.application {
     justify-content: center;
   }
 }
+
+* {
+  box-sizing: border-box;
+}
+/* Remove extra left and right margins, due to padding in columns */
+
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  margin: 20px 0;
+}
+
+.column {
+  display: flex;
+  flex-direction: row;
+  width: 25%;
+  padding: 0 16px;
+}
+
+@media screen and (max-width: 992px) {
+  .column {
+    width: 50%;
+    margin-bottom: 20px;
+  }
+}
+@media screen and (max-width: 600px) {
+  .column {
+    width: 100%;
+  }
+}
 </style>

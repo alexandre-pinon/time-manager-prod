@@ -14,7 +14,12 @@ import { mapState } from "vuex";
 export default Vue.extend({
   name: "tm-card-result",
   props: {
-    jsonData: { type: Object, default: function () {return {}} },
+    jsonData: {
+      type: Object,
+      default: function () {
+        return {};
+      },
+    },
   },
   computed: {
     ...mapState(["currentUser"]),
@@ -26,3 +31,13 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss">
+pre {
+  white-space: pre-wrap;
+  text-align: left;
+  font-size: large;
+  color: #2c3e50;
+  padding: 0 16px;
+}
+</style>
