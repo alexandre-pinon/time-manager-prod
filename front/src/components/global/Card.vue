@@ -1,5 +1,5 @@
 <template>
-  <div class="card shadow flex js-center">
+  <div class="card shadow flex js-center f-column">
     <slot />
   </div>
 </template>
@@ -16,6 +16,7 @@ export default Vue.extend({
 div.application {
   .card {
     border-radius: 4px;
+    padding: 16px;
   }
 }
 </style>
