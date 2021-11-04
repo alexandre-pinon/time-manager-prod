@@ -5,7 +5,7 @@ import {
   Home,
   WorkingTimes,
   WorkingTime,
-  //   ClockManager,
+  ClockManager,
   ChartManager,
 } from "@/components";
 
@@ -23,14 +23,14 @@ const routes: Array<any> = [
   {
     path: "/workingtime/:userId",
     component: WorkingTime,
-    name: "UserWorkingTime",
+    name: "WorkingTime",
   },
   {
     path: "/workingtime/:userId/:workingTimeId",
     component: WorkingTime,
-    name: "WorkingTime",
+    name: "SingleWorkingTime",
   },
-  // { path: "/clock/:username", component: ClockManager, name: "Clock" },
+  { path: "/clock/:username", component: ClockManager, name: "Clock" },
   { path: "/chartmanager/:userId", component: ChartManager, name: "Charts" },
 ];
 

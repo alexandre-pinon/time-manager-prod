@@ -12,7 +12,7 @@
   <div v-else class="navbar navbar-full flex js-between shadow">
     <div class="navbar-links flex js-center">
       <Button
-        v-for="(link, idx) in links"
+        v-for="(link, idx) in computedLinks"
         class="navbar-link"
         transparent
         :key="idx"
@@ -41,7 +41,10 @@
 </template>
 
 <script lang="ts">
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Vue from "vue";
+
+import { mapState } from "vuex";
 
 import { UserIcon, MenuIcon, XIcon } from "vue-feather-icons";
 import { Button } from "@/components/global";
@@ -51,30 +54,40 @@ export default Vue.extend({
   components: { Button, UserIcon, MenuIcon, XIcon },
   data() {
     return {
-      links: [
+      isMinified: true,
+    };
+  },
+  computed: {
+    computedLinks: function (): Array<Record<string, any>> {
+      const { id: userId, username } = this?.currentUser || {};
+      return [
         {
           to: "/",
           label: "Home",
         },
         {
-          to: "/workingtimes/:userId",
+          to: `/workingtimes/${userId}`,
           label: "Working Times",
         },
         {
-          to: "/workingtime/:userId",
+          to: `/workingtime/${userId}`,
           label: "Working Time",
         },
+        // {
+        //   to: `/workingtime/${userId}/:workingTimeId`,
+        //   label: "Working Time",
+        // },
         {
-          to: "/workingtime/:userId/:workingTimeId",
-          label: "Working Time",
+          to: `/clock/${username}`,
+          label: "Clock",
         },
         {
-          to: "/chartManager/:userId/",
+          to: `/chartmanager/${userId}`,
           label: "Charts",
         },
-      ],
-      isMinified: true,
-    };
+      ];
+    },
+    ...mapState(["currentUser"]),
   },
 });
 </script>
