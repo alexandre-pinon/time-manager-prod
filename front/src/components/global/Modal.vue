@@ -7,7 +7,11 @@
       <Button class="modal-button" negative @click="$emit('close-modal')">
         Fermer
       </Button>
-      <Button class="modal-button" @click="$emit('validate-modal')">
+      <Button
+        v-if="hasValidate"
+        class="modal-button"
+        @click="$emit('validate-modal')"
+      >
         Valider
       </Button>
     </div>

@@ -45,17 +45,28 @@ export const chartOptions = {
   },
 };
 
+export const generateBorderColor = function (color: string): string {
+  return `rgba(${_.trimStart(
+    _.trimEnd(color[0] === "#" ? hexToRGB(color, "1") : color, ")"),
+    "rgba("
+  )
+    .split(",")
+    .map((val: any, idx: number) => Math.max(idx < 3 ? +val / 1.25 : 1, 0))
+    .join(",")})`;
+};
+
 export const generateChartProps = function (
   type: string,
   series: Record<string, Array<number>> = {},
   labels: Array<any> = [],
   colors: Array<string> = [],
-  opts: Record<string, any> = {}
+  opts: Record<string, any> = {},
+  options: Record<string, any> = chartOptions
 ): Record<string, any> {
   return {
     type,
-    options: chartOptions,
-    data: generateChartData(series, labels, colors, opts),
+    options,
+    data: generateChartData(series, labels, colors, opts, type),
   };
 };
 
@@ -63,33 +74,39 @@ export const generateChartData = function (
   series: Record<string, Array<number>> = {},
   labels: Array<any> = [],
   colors: Array<string> = [],
-  opts: Record<string, any> = {}
+  opts: Record<string, any> = {},
+  type: string
 ): Record<string, any> {
   const { hoverOffset = 2, ...restOpts } = opts;
   const length: any = _.maxBy(_.values(series), "length")?.length;
   if (!length || labels?.length !== length) return {};
+  console.log({ series, labels, colors, type });
+  const isPie = (): boolean => type === "pie";
   return {
     labels,
     datasets: _.map(series, (val: Array<number>, key: string) => {
       if (val?.length !== length) return;
-      const color =
-        colors?.length > 1
-          ? colors[_.keys(series).indexOf(key)] || "rgba(71, 183,132,.5)"
-          : colors[0];
-      const borderColor = `rgba(${_.trimStart(
-        _.trimEnd(color[0] === "#" ? hexToRGB(color, "1") : color, ")"),
-        "rgba("
-      )
-        .split(",")
-        .map((val: any, idx: number) => Math.max(idx < 3 ? +val / 1.25 : 1, 0))
-        .join(",")})`;
-      console.log({ color, borderColor });
+      let color;
+      if (!isPie()) {
+        color =
+          colors?.length > 1
+            ? colors[_.keys(series).indexOf(key)] || "rgba(71, 183,132,.5)"
+            : colors[0];
+      }
       return {
         label: key,
         data: val,
         color: chartColors.textColor,
-        backgroundColor: color,
-        borderColor,
+        backgroundColor: isPie()
+          ? val.map((v: any, idx: number) => colors[idx] || colors[0])
+          : color,
+        borderColor: isPie()
+          ? val.map((v: any, idx: number) =>
+              colors[idx] !== undefined
+                ? generateBorderColor(colors[idx])
+                : generateBorderColor(colors[0])
+            )
+          : generateBorderColor(color as string),
         borderWidth: 3,
       };
     }),

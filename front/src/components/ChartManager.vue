@@ -14,7 +14,7 @@ import Vue from "vue";
 import _ from "lodash";
 import moment from "moment";
 
-import { chartColors, generateChartProps } from "@/utils/charts";
+import { chartColors, chartOptions, generateChartProps } from "@/utils/charts";
 import api from "@/utils/api";
 
 import { Chart } from "@/components/atoms";
@@ -56,10 +56,38 @@ export default Vue.extend({
           chartId: "chart-pie",
           ...generateChartProps(
             "pie",
-            { "heures d'arrivée": [300, 50, 200, 75, 100] },
-            ["7h30, 8h, 8h30, 9h, 9h30"],
-            [chartColors.primaryColor],
-            { hoverOffset: 4 }
+            { "heures d'arrivée": [300, 50, 200, 75] },
+            ["7h30", "8h", "8h30", "9h"],
+            [
+              chartColors.primaryColor,
+              chartColors.secondaryColor,
+              chartColors.tertiaryColor,
+              chartColors.quaternaryColor,
+            ],
+            { hoverOffset: 4 },
+            {
+              ...chartOptions,
+              scales: {
+                y: {
+                  grid: {
+                    drawBorder: false,
+                    display: false,
+                  },
+                  ticks: {
+                    display: false,
+                  },
+                },
+                x: {
+                  grid: {
+                    drawBorder: false,
+                    display: false,
+                  },
+                  ticks: {
+                    display: false,
+                  },
+                },
+              },
+            }
           ),
         },
         {
@@ -104,7 +132,6 @@ div.application {
       height: 250px;
     }
     &-card {
-      border: 1px solid var(--color-border);
       border-radius: 4px;
       height: 100%;
     }
