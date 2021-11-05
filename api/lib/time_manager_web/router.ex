@@ -8,7 +8,7 @@ defmodule TimeManagerAPIWeb.Router do
 
   pipeline :api_protected do
     plug Pow.Plug.RequireAuthenticated,
-      error_handler: Pow.Phoenix.PlugErrorHandler
+      error_handler: TimeManagerAPIWeb.AuthErrorHandler
   end
 
   scope "/api", TimeManagerAPIWeb do
@@ -21,6 +21,7 @@ defmodule TimeManagerAPIWeb.Router do
     end
 
     scope "/workingtimes" do
+      pipe_through :api_protected
       resources "/", WorkingTimeController, only: [:update, :delete]
       resources "/:userID", WorkingTimeController, only: [:show, :index, :create]
     end

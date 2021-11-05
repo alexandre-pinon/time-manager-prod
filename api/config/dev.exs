@@ -61,4 +61,4 @@ config :phoenix, :stacktrace_depth, 20
 config :phoenix, :plug_init_mode, :runtime
 
 # JWT
-config :joken, default_signer: "secret"
+config :joken, default_signer: "8TzQSoymSZ5RZC9EJMxm92O+Tb1opDiaSyHzJY/Ek1Cxu7gR6k"
