@@ -3,12 +3,22 @@ defmodule TimeManagerAPIWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug TimeManagerAPI.Auth.AuthFlow, otp_app: :time_manager
+  end
+
+  pipeline :api_protected do
+    plug Pow.Plug.RequireAuthenticated,
+      error_handler: Pow.Phoenix.PlugErrorHandler
   end
 
   scope "/api", TimeManagerAPIWeb do
     pipe_through :api
 
-    resources "/users", UserController, except: [:new, :edit]
+    scope "/users" do
+      resources "/", UserController, except: [:new, :edit]
+      post "/sign_in", UserLogin, :sign_in
+      post "/sign_up", UserRegistration, :sign_up
+    end
 
     scope "/workingtimes" do
       resources "/", WorkingTimeController, only: [:update, :delete]

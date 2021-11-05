@@ -40,6 +40,11 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+# Configures POW
+config :time_manager, :pow,
+  user: TimeManagerAPI.TimeManagerData.User,
+  repo: TimeManagerAPI.Repo
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

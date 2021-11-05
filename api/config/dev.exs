@@ -8,7 +8,7 @@ config :time_manager, TimeManagerAPI.Repo,
   hostname: System.get_env("PGHOST"),
   port: System.get_env("PGPORT"),
   show_sensitive_data_on_connection_error: true,
-  pool_size: 10
+  pool_size: 1
 
 # For development, we disable any cache and enable
 # debugging and code reloading.
@@ -59,3 +59,6 @@ config :phoenix, :stacktrace_depth, 20
 
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
+
+# JWT
+config :joken, default_signer: "secret"
