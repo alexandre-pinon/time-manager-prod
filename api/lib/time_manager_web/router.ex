@@ -15,13 +15,17 @@ defmodule TimeManagerAPIWeb.Router do
     pipe_through :api
 
     scope "/users" do
-      resources "/", UserController, except: [:new, :edit]
       post "/sign_in", UserLogin, :sign_in
       post "/sign_up", UserRegistration, :sign_up
     end
 
+    pipe_through :api_protected
+
+    scope "/users" do
+      resources "/", UserController, except: [:new, :edit]
+    end
+
     scope "/workingtimes" do
-      pipe_through :api_protected
       resources "/", WorkingTimeController, only: [:update, :delete]
       resources "/:userID", WorkingTimeController, only: [:show, :index, :create]
     end

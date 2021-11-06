@@ -4,6 +4,7 @@ defmodule TimeManagerAPIWeb.UserController do
   alias TimeManagerAPI.TimeManagerData
   alias TimeManagerAPI.TimeManagerData.User
 
+  plug TimeManagerAPIWeb.EnsureRolePlug, :admin
   action_fallback TimeManagerAPIWeb.FallbackController
 
   def index(conn, %{"email" => email, "username" => username}) do
