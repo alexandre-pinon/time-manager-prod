@@ -23,6 +23,7 @@ defmodule TimeManagerAPIWeb.Router do
 
     scope "/users" do
       resources "/", UserController, except: [:new, :edit]
+      put "/set_role/:id", UserController, :set_role
     end
 
     scope "/workingtimes" do

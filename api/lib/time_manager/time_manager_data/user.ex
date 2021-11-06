@@ -19,7 +19,8 @@ defmodule TimeManagerAPI.TimeManagerData.User do
   @doc false
   def changeset(user_or_changeset, attrs) do
     user_or_changeset
-    |> pow_changeset(attrs)
+    |> pow_user_id_field_changeset(attrs)
+    |> pow_password_changeset(attrs)
     |> cast(attrs, [:first_name, :last_name])
     |> validate_required([:first_name, :last_name])
   end
@@ -27,6 +28,7 @@ defmodule TimeManagerAPI.TimeManagerData.User do
   def changeset_role(user_or_changeset, attrs) do
     user_or_changeset
     |> cast(attrs, [:role])
+    |> validate_required([:role])
     |> validate_inclusion(:role, [:user, :manager, :admin])
   end
 end

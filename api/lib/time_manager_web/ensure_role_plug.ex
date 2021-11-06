@@ -16,13 +16,20 @@ defmodule TimeManagerAPIWeb.EnsureRolePlug do
   alias Plug.Conn
 
   @doc false
-  def init(config), do: config
+  def init(config) do
+    roles = Keyword.get(config, :roles)
+    check_self = Keyword.get(config, :check_self, false)
+    %{roles: roles, check_self: check_self}
+  end
 
   @doc false
-  def call(conn, roles) do
+  def call(conn, config) do
     conn.private
-    |> has_role?(roles)
-    |> is_self?(conn.private, conn.params)
+    |> has_role?(config.roles)
+    |> case do
+      has_role when config.check_self -> is_self?(has_role, conn.private, conn.params)
+      has_role -> has_role
+    end
     |> maybe_halt(conn)
   end
 

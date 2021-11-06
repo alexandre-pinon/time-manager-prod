@@ -93,6 +93,12 @@ defmodule TimeManagerAPI.TimeManagerData do
     |> Repo.update()
   end
 
+  def set_role(user, role) do
+    user
+    |> User.changeset_role(%{role: role})
+    |> Repo.update()
+  end
+
   @doc """
   Deletes a user.
 
