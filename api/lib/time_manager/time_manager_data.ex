@@ -71,6 +71,7 @@ defmodule TimeManagerAPI.TimeManagerData do
   def create_user(attrs \\ %{}) do
     %User{}
     |> User.changeset(attrs)
+    |> User.changeset_role(attrs)
     |> Repo.insert()
   end
 
