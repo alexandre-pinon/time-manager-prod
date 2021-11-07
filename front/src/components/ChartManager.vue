@@ -44,7 +44,7 @@ export default mixins(API).extend({
           ...generateChartProps(
             "line",
             {
-              pause: [0, 0, 2, 4, 1],
+              "pause": [0, 0, 2, 4, 1],
               "working time": [6, 5, 8, 9, 7.5],
             },
             ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"],
@@ -97,15 +97,11 @@ export default mixins(API).extend({
             "line",
             {
               "working time": [8, 10, 6, 8.5, 5],
-              extratime: [2, 4, 0, 3, 0],
-              "night working time": [1, 0, 3, 4, 2],
+              "extratime": [2, 4, 0, 3, 0],
+              "night working time": [1, 0, 3, 4, 2]
             },
             ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"],
-            [
-              chartColors.secondaryColor,
-              chartColors.primaryColor,
-              chartColors.tertiaryColor,
-            ]
+            [chartColors.secondaryColor, chartColors.primaryColor, chartColors.tertiaryColor]
           ),
         },
         {
