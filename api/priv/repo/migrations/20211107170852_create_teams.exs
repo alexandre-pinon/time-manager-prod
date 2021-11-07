@@ -3,9 +3,11 @@ defmodule TimeManagerAPI.Repo.Migrations.CreateTeams do
 
   def change do
     create table(:teams) do
-      add :name, :string
+      add :name, :string, null: false
 
       timestamps()
     end
+
+    create unique_index(:teams, [:name])
   end
 end

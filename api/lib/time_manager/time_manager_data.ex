@@ -36,6 +36,12 @@ defmodule TimeManagerAPI.TimeManagerData do
     |> Repo.all()
   end
 
+  def list_users(user_ids: user_ids) do
+    User
+    |> where([u], u.id in ^user_ids)
+    |> Repo.all()
+  end
+
   def list_users do
     Repo.all(User)
   end
@@ -382,7 +388,7 @@ defmodule TimeManagerAPI.TimeManagerData do
 
   """
   def list_teams do
-    Repo.all(Team)
+    Repo.all(Team) |> Repo.preload(:users)
   end
 
   @doc """
@@ -399,7 +405,7 @@ defmodule TimeManagerAPI.TimeManagerData do
       ** (Ecto.NoResultsError)
 
   """
-  def get_team!(id), do: Repo.get!(Team, id)
+  def get_team!(id), do: Repo.get!(Team, id) |> Repo.preload(:users)
 
   @doc """
   Creates a team.
@@ -414,9 +420,16 @@ defmodule TimeManagerAPI.TimeManagerData do
 
   """
   def create_team(attrs \\ %{}) do
+    users = list_users(user_ids: attrs["user_ids"])
+
     %Team{}
     |> Team.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:users, users)
     |> Repo.insert()
+    |> case do
+      {:ok, %Team{} = team} -> {:ok, Repo.preload(team, :users)}
+      errors -> errors
+    end
   end
 
   @doc """
@@ -432,9 +445,16 @@ defmodule TimeManagerAPI.TimeManagerData do
 
   """
   def update_team(%Team{} = team, attrs) do
+    users = list_users(user_ids: attrs["user_ids"])
+
     team
     |> Team.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:users, users)
     |> Repo.update()
+    |> case do
+      {:ok, %Team{} = team} -> {:ok, Repo.preload(team, :users)}
+      errors -> errors
+    end
   end
 
   @doc """

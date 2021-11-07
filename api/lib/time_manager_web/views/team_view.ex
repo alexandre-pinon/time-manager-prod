@@ -1,6 +1,7 @@
 defmodule TimeManagerAPIWeb.TeamView do
   use TimeManagerAPIWeb, :view
   alias TimeManagerAPIWeb.TeamView
+  alias TimeManagerAPIWeb.UserView
 
   def render("index.json", %{teams: teams}) do
     %{data: render_many(teams, TeamView, "team.json")}
@@ -14,7 +15,7 @@ defmodule TimeManagerAPIWeb.TeamView do
     %{
       id: team.id,
       name: team.name,
-      users: team.users
+      users: render_many(team.users, UserView, "user.json", as: :user)
     }
   end
 end

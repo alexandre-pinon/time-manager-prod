@@ -5,7 +5,9 @@ defmodule TimeManagerAPI.TimeManagerData.Team do
   schema "teams" do
     field :name, :string
 
-    many_to_many :users, TimeManagerAPI.TimeManagerData.User, join_through: "teams_users", on_replace: :delete
+    many_to_many :users, TimeManagerAPI.TimeManagerData.User,
+      join_through: "teams_users",
+      on_replace: :delete
 
     timestamps()
   end
@@ -13,7 +15,8 @@ defmodule TimeManagerAPI.TimeManagerData.Team do
   @doc false
   def changeset(team, attrs) do
     team
-    |> cast(attrs, [:name, :users])
-    |> validate_required([:name, :users])
+    |> cast(attrs, [:name])
+    |> validate_required([:name])
+    |> unique_constraint(:name)
   end
 end
