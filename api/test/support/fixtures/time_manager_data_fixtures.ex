@@ -48,4 +48,19 @@ defmodule TimeManagerAPI.TimeManagerDataFixtures do
 
     working_time
   end
+
+  @doc """
+  Generate a team.
+  """
+  def team_fixture(attrs \\ %{}) do
+    {:ok, team} =
+      attrs
+      |> Enum.into(%{
+        name: "some name",
+        users: []
+      })
+      |> TimeManagerAPI.TimeManagerData.create_team()
+
+    team
+  end
 end

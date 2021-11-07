@@ -12,6 +12,7 @@ defmodule TimeManagerAPI.TimeManagerData.User do
 
     has_one :clock, TimeManagerAPI.TimeManagerData.Clock
     has_many :working_time, TimeManagerAPI.TimeManagerData.WorkingTime
+    many_to_many :teams, TimeManagerAPI.TimeManagerData.User, join_through: "teams_users"
 
     timestamps()
   end

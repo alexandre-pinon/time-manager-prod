@@ -31,10 +31,12 @@ defmodule TimeManagerAPIWeb.Router do
       resources "/:userID", WorkingTimeController, only: [:show, :index, :create]
     end
 
-    scope "/clocks" do
-      get "/:userID", ClockController, :show
-      post "/:userID", ClockController, :create
-      put "/:userID", ClockController, :update
+    scope "/clocks/:userID" do
+      get "/", ClockController, :show
+      post "/", ClockController, :create
+      put "/", ClockController, :update
     end
+
+    resources "/teams", TeamController, except: [:new, :edit]
   end
 end
