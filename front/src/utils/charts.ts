@@ -15,7 +15,7 @@ export const chartColors = {
 export const chartOptions = {
   responsive: true,
   maintainAspectRatio: false,
-  lineTension: 1,
+  // lineTension: 1,
   plugins: {
     legend: {
       labels: {
