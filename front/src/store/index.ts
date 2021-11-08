@@ -10,8 +10,15 @@ export const store = new Vuex.Store({
   },
   mutations: {
     setUser: function (state: any, value: any) {
-      const { id, username, email, role = "USER" } = value;
-      state.currentUser = { id, username, email, role };
+      const {
+        id,
+        username,
+        firstname,
+        lastname,
+        role = "USER",
+        team = "",
+      } = value;
+      state.currentUser = { id, username, firstname, lastname, role, team };
     },
   },
 });

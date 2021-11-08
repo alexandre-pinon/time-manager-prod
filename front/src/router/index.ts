@@ -2,36 +2,73 @@
 import VueRouter from "vue-router";
 
 import {
-  Home,
   WorkingTimes,
   WorkingTime,
   ClockManager,
   ChartManager,
+  User,
 } from "@/components";
 
 const routes: Array<any> = [
+  // ANCHOR - Home redirect & auth
   {
-    path: "/",
-    component: Home,
+    path: "/home",
+    redirect: (to: Record<string, any>) => {
+      const { params } = to;
+      if (params?.userId) return "/home/:userId";
+      else return "/login";
+    },
+  },
+  {
+    path: "/login",
+    components: {
+      content: User,
+    },
+    name: "Login",
+  },
+  // ANCHOR - Main pages
+  {
+    path: "/home/:userId",
+    components: {
+      side: ClockManager,
+      content: ChartManager,
+    },
     name: "Home",
   },
   {
+    path: "/overseer",
+  },
+  // ANCHOR - Detailed views
+  {
     path: "/workingtimes/:userId",
-    component: WorkingTimes,
+    components: { content: WorkingTimes },
     name: "WorkingTimes",
   },
   {
     path: "/workingtime/:userId",
-    component: WorkingTime,
+    components: { content: WorkingTime },
     name: "WorkingTime",
   },
   {
     path: "/workingtime/:userId/:workingTimeId",
-    component: WorkingTime,
+    components: { content: WorkingTime },
     name: "SingleWorkingTime",
   },
-  { path: "/clock/:username", component: ClockManager, name: "Clock" },
-  { path: "/chartmanager/:userId", component: ChartManager, name: "Charts" },
+  {
+    path: "/clock/:userId",
+    components: { content: ClockManager },
+    name: "Clock",
+  },
+  {
+    path: "/chartmanager/:userId",
+    components: { content: ChartManager },
+    name: "Charts",
+  },
+  // ANCHOR - Catch all
+  {
+    path: "*",
+    redirect: "/home",
+  },
 ];
 
-export const router = new VueRouter({ routes });
+export const router = new VueRouter({ routes, mode: "history" });

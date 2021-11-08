@@ -1,8 +1,16 @@
 <template>
   <div class="clock-manager flex f-column">
-    Clock - {{ computedUsername || "No username loaded" }}
+    Clock - {{ computedUserId || "No username loaded" }}
     <Card class="clock-manager-content">
-      {{ startDateTime + " - il y a " + computedTimer }}
+      {{
+        startDateTime
+          ? startDateTime.format("DD/MM/YYYY HH:mm") +
+            " - " +
+            clockIn +
+            " - " +
+            computedTimer
+          : "Chargement..."
+      }}
       <Button @click="() => clock()"> Changer de statut </Button>
     </Card>
   </div>
@@ -38,21 +46,15 @@ export default Vue.extend({
     };
   },
   computed: {
-    computedUsername: function (): string {
-      const { currentUser, $route: route } = this;
-      const { username: currentUsername } = currentUser;
-      const { username } = route?.params || {};
-      return currentUsername && username === currentUsername
-        ? currentUsername
-        : "";
-    },
     computedUserId: function (): number {
-      const { currentUser, computedUsername } = this;
-      const { currentUserId, currentUsername } = currentUser;
-      return currentUsername === computedUsername ? +currentUserId : 0;
+      const { currentUser, $route: route } = this;
+      const { id: currentUserId } = currentUser;
+      const { userId } = route?.params || {};
+      return currentUserId && +userId === +currentUserId ? currentUserId : 0;
     },
     computedTimer: function (): number {
-      return 101;
+      const { startDateTime } = this;
+      return moment().diff(startDateTime, "seconds");
     },
     ...mapState(["currentUser"]),
   },
@@ -61,25 +63,54 @@ export default Vue.extend({
   },
   methods: {
     refresh: async function (): Promise<void> {
-      this.clockIn = this.clockIn && !this.clockIn;
-      clearInterval(this.timer);
-      this.time = moment().startOf("date").format("HH:mm:ss");
+      // this.clockIn = this.clockIn && !this.clockIn;
+      // clearInterval(this.timer);
+      // this.time = moment().startOf("date").format("HH:mm:ss");
+      const { computedUserId } = this;
+      let { data: clock } = (await api.getClock(1)) || {};
+      if (!clock)
+        clock = (
+          (await api.createClock(
+            1,
+            moment().format("YYYY-MM-DD HH:mm:ss"),
+            false
+          )) || {}
+        )?.data;
+      console.log({ clock });
+      const { time, status } = clock;
+      this.startDateTime = moment(time);
+      this.clockIn = status;
     },
     clock: function (): void {
-      const { clockIn, time } = this;
-      this.clockIn = !clockIn;
-      this.startDateTime = moment();
-      if (clockIn) {
-        this.timer = setInterval(() => {
-          this.$set(
-            this,
-            "time",
-            moment(time, "HH:mm:ss").add(1, "s").format("HH:mm:ss")
-          );
-        }, 1000);
-        const tmpUserId = 1;
-        this.startRecordTime(tmpUserId, time);
-      }
+      // const { clockIn, time } = this;
+      // this.clockIn = !clockIn;
+      // this.startDateTime = moment();
+      // if (clockIn) {
+      //   this.timer = setInterval(() => {
+      //     this.$set(
+      //       this,
+      //       "time",
+      //       moment(time, "HH:mm:ss").add(1, "s").format("HH:mm:ss")
+      //     );
+      //   }, 1000);
+      //   const tmpUserId = 1;
+      //   this.startRecordTime(tmpUserId, time);
+      // }
+      const { computedUserId, startDateTime } = this;
+      const [oldTime, newTime] = [startDateTime, moment()];
+      this.clockIn = !this.clockIn;
+      this.startDateTime = newTime;
+      console.log({ oldTime, newTime });
+      api.updateClock(1, {
+        time: newTime.format("YYYY-MM-DD HH:mm:ss"),
+        status: this.clockIn,
+      });
+      if (!this.clockIn)
+        api.createWorkingTime(
+          1,
+          oldTime.format("YYYY-MM-DD HH:mm:ss"),
+          newTime.format("YYYY-MM-DD HH:mm:ss")
+        );
     },
     startRecordTime: async function (userId: number, time: string) {
       const clock = {

@@ -59,32 +59,32 @@ export default Vue.extend({
   },
   computed: {
     computedLinks: function (): Array<Record<string, any>> {
-      const { id: userId, username } = this?.currentUser || {};
+      const { id: userId } = this?.currentUser || {};
       return [
         {
-          to: "/",
+          to: `/${userId}`,
           label: "Home",
         },
-        {
-          to: `/workingtimes/${userId}`,
-          label: "Working Times",
-        },
-        {
-          to: `/workingtime/${userId}`,
-          label: "Working Time",
-        },
+        // {
+        //   to: `/workingtimes/${userId}`,
+        //   label: "Working Times",
+        // },
+        // {
+        //   to: `/workingtime/${userId}`,
+        //   label: "Working Time",
+        // },
         // {
         //   to: `/workingtime/${userId}/:workingTimeId`,
         //   label: "Working Time",
         // },
         {
-          to: `/clock/${username}`,
+          to: `/clock/${userId}`,
           label: "Clock",
         },
-        {
-          to: `/chartmanager/${userId}`,
-          label: "Charts",
-        },
+        // {
+        //   to: `/chartmanager/${userId}`,
+        //   label: "Charts",
+        // },
       ];
     },
     ...mapState(["currentUser"]),

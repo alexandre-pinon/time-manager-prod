@@ -8,7 +8,10 @@
       >
         <User />
       </Modal>
-      <router-view />
+      <div class="flex application-view-wrapper">
+        <router-view class="application-side" name="side" />
+        <router-view class="application-content" name="content" />
+      </div>
     </div>
   </div>
 </template>
@@ -17,7 +20,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-this-alias */
 import Vue from "vue";
-import VueRouter from "vue-router";
+import VueRouter, { Route, NavigationGuardNext } from "vue-router";
 
 import { store } from "@/store";
 import { router } from "@/router";
@@ -26,6 +29,12 @@ import { Navbar, User } from "@/components";
 import { Modal } from "@/components/global";
 
 Vue.use(VueRouter);
+
+router.beforeEach((to: Route, from: Route, next: NavigationGuardNext<Vue>) => {
+  const tempIsAuthOk = true;
+  if (to?.name !== "Login" && !tempIsAuthOk) next("/login");
+  else next();
+});
 
 export default Vue.extend({
   name: "App",
