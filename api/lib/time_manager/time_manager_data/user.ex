@@ -8,6 +8,9 @@ defmodule TimeManagerAPI.TimeManagerData.User do
     field :email, :string
     field :username, :string
 
+    has_one :clock, TimeManagerAPI.TimeManagerData.Clock
+    has_many :working_time, TimeManagerAPI.TimeManagerData.WorkingTime
+
     timestamps()
   end
 

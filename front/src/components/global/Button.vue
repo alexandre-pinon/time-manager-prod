@@ -1,9 +1,31 @@
 <template>
-  <router-link v-if="to" class="button" :to="to">
-    <slot />
-  </router-link>
-  <div v-else class="button" @click="() => onClick()">
-    <slot />
+  <div
+    :class="{
+      'button flex js-center': true,
+      'button-transparent': transparent,
+      'button-small': small,
+      'button-negative': negative,
+      'button-round': round,
+    }"
+    :style="{
+      height: height || small ? '32px' : '48px',
+      'min-width': height || small ? '32px' : '48px',
+    }"
+  >
+    <router-link
+      v-if="to"
+      :class="{ 'button-content pointer': true, 'button-content-icon': icon }"
+      :to="to"
+    >
+      <slot />
+    </router-link>
+    <div
+      v-else
+      :class="{ 'button-content pointer': true, 'button-content-icon': icon }"
+      @click="() => $emit('click')"
+    >
+      <slot />
+    </div>
   </div>
 </template>
 
@@ -14,8 +36,13 @@ import Vue from "vue";
 export default Vue.extend({
   name: "tm-button",
   props: {
-    to: { type: String, default: "" },
-    onClick: { type: Function, default: () => {} },
+    small: Boolean,
+    negative: Boolean,
+    transparent: Boolean,
+    icon: Boolean,
+    round: Boolean,
+    to: { type: String, default: undefined },
+    height: { type: String, default: "" },
   },
 });
 </script>
@@ -23,15 +50,42 @@ export default Vue.extend({
 <style lang="scss">
 div.application {
   .button {
-    padding: 8px;
-    background: $accent-color;
-    color: $text-color;
-    font-weight: bold;
-    font-size: 16pt;
-    text-decoration: none;
-    border-radius: 8px;
+    background: $color-primary;
+    border-radius: 4px;
+    padding-left: 8px;
+    padding-right: 8px;
+    &.button-round {
+      border-radius: 50%;
+    }
+    &.button-negative {
+      background: $color-secondary;
+      &:hover {
+        background: $color-secondary-hover;
+      }
+    }
+    &.button-transparent {
+      background: transparent;
+      &:hover {
+        background: $color-border;
+      }
+    }
+    &.button-small {
+      &-content {
+        font-size: 12pt;
+      }
+    }
+    &-content {
+      color: $color-text;
+      font-weight: bold;
+      font-size: 16pt;
+      text-decoration: none;
+      &-icon {
+        height: 24px;
+        width: 24px;
+      }
+    }
     &:hover {
-      background: $hover-color;
+      background: $color-primary-hover;
     }
   }
 }

@@ -14,7 +14,7 @@ class API {
     this.port = port || this.port;
     this.url = `${url || this.url}:${this.port}/api`;
   }
-  
+
   getAllUsers = async (): Promise<any> => {
     const { url } = this;
     console.log("getUsers");
@@ -51,9 +51,9 @@ class API {
     const { url } = this;
     console.log("deleteUser : ", id);
     return await axios
-    .delete(`${url}/users/${id}`)
-    .then((result: any) => result?.data)
-    .catch((err: any) => handleError("deleteUser", err));
+      .delete(`${url}/users/${id}`)
+      .then((result: any) => result?.data)
+      .catch((err: any) => handleError("deleteUser", err));
   };
 
   getWorkingTimes = async (

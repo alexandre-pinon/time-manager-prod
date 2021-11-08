@@ -1,24 +1,41 @@
 <template>
-  <div>
+  <div class="clock-manager flex f-column">
+    Clock - {{ computedUserId || "No username loaded" }}
+    <Card class="clock-manager-content">
+      {{
+        startDateTime
+          ? startDateTime.format("DD/MM/YYYY HH:mm") +
+            " - " +
+            clockIn +
+            " - " +
+            computedTimer
+          : "Chargement..."
+      }}
+      <Button @click="() => clock()"> Changer de statut </Button>
+    </Card>
+  </div>
+  <!-- <div>
     <h1>CLOCK MANAGER</h1>
     <h3>{{ time }}</h3>
     <button @click="clock()">{{ clockIn ? "STOP" : "START" }}</button>
     <button @click="refresh()" :disabled="!clockIn">REFRESH</button>
-  </div>
+  </div> -->
 </template>
 
 <script lang="ts">
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import Vue from "vue";
+import moment, { Moment } from "moment";
+
+import { mapState } from "vuex";
 
 import api from "@/utils/api";
 import { chainPromises } from "@/utils/helpers";
-import moment, { Moment } from "moment";
-import Vue from "vue";
-import { mapState } from "vuex";
+import { Card, Button } from "@/components/global";
 
 export default Vue.extend({
   name: "tm-clock-manager",
-  props: {},
+  components: { Card, Button },
   data() {
     return {
       startDateTime: null as unknown as Moment,
@@ -29,28 +46,71 @@ export default Vue.extend({
     };
   },
   computed: {
+    computedUserId: function (): number {
+      const { currentUser, $route: route } = this;
+      const { id: currentUserId } = currentUser;
+      const { userId } = route?.params || {};
+      return currentUserId && +userId === +currentUserId ? currentUserId : 0;
+    },
+    computedTimer: function (): number {
+      const { startDateTime } = this;
+      return moment().diff(startDateTime, "seconds");
+    },
     ...mapState(["currentUser"]),
   },
+  created() {
+    this.refresh();
+  },
   methods: {
-    refresh() {
-      this.clockIn = this.clockIn && !this.clockIn;
-      clearInterval(this.timer);
-      this.time = moment().startOf("date").format("HH:mm:ss");
+    refresh: async function (): Promise<void> {
+      // this.clockIn = this.clockIn && !this.clockIn;
+      // clearInterval(this.timer);
+      // this.time = moment().startOf("date").format("HH:mm:ss");
+      const { computedUserId } = this;
+      let { data: clock } = (await api.getClock(1)) || {};
+      if (!clock)
+        clock = (
+          (await api.createClock(
+            1,
+            moment().format("YYYY-MM-DD HH:mm:ss"),
+            false
+          )) || {}
+        )?.data;
+      console.log({ clock });
+      const { time, status } = clock;
+      this.startDateTime = moment(time);
+      this.clockIn = status;
     },
-    clock() {
+    clock: function (): void {
+      // const { clockIn, time } = this;
+      // this.clockIn = !clockIn;
+      // this.startDateTime = moment();
+      // if (clockIn) {
+      //   this.timer = setInterval(() => {
+      //     this.$set(
+      //       this,
+      //       "time",
+      //       moment(time, "HH:mm:ss").add(1, "s").format("HH:mm:ss")
+      //     );
+      //   }, 1000);
+      //   const tmpUserId = 1;
+      //   this.startRecordTime(tmpUserId, time);
+      // }
+      const { computedUserId, startDateTime } = this;
+      const [oldTime, newTime] = [startDateTime, moment()];
       this.clockIn = !this.clockIn;
-      this.startDateTime = moment();
-      if (this.clockIn) {
-        this.timer = setInterval(() => {
-          this.$set(
-            this,
-            "time",
-            moment(this.time, "HH:mm:ss").add(1, "s").format("HH:mm:ss")
-          );
-        }, 1000);
-        const tmpUserId = 1;
-        this.startRecordTime(tmpUserId, this.time);
-      }
+      this.startDateTime = newTime;
+      console.log({ oldTime, newTime });
+      api.updateClock(1, {
+        time: newTime.format("YYYY-MM-DD HH:mm:ss"),
+        status: this.clockIn,
+      });
+      if (!this.clockIn)
+        api.createWorkingTime(
+          1,
+          oldTime.format("YYYY-MM-DD HH:mm:ss"),
+          newTime.format("YYYY-MM-DD HH:mm:ss")
+        );
     },
     startRecordTime: async function (userId: number, time: string) {
       const clock = {
@@ -82,3 +142,13 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss">
+div.application {
+  .clock-manager {
+    &-content {
+      margin-top: 16px;
+    }
+  }
+}
+</style>

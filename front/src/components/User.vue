@@ -22,14 +22,19 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
 /* eslint-disable @typescript-eslint/no-empty-function */
 import Vue from "vue";
+import _ from "lodash";
+
 import { mapState } from "vuex";
+
 import api from "@/utils/api";
 import { CardForm, CardResult } from "@/components/forms";
-import _ from "lodash";
 
 export default Vue.extend({
   name: "tm-user",
-  props: {},
+  components: {
+    CardForm,
+    CardResult,
+  },
   data() {
     return {
       jsonData: {},
@@ -104,10 +109,6 @@ export default Vue.extend({
         },
       ],
     };
-  },
-  components: {
-    CardForm,
-    CardResult,
   },
   computed: {
     ...mapState(["currentUser"]),

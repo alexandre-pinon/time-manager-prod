@@ -2,52 +2,14 @@
 import _ from "lodash";
 import { hexToRGB } from "./helpers";
 
-export const generateChartData = function (
-  series: Record<string, Array<number>> = {},
-  labels: Array<any> = [],
-  colors: Array<string> = [],
-  opts: Record<string, any> = {}
-): Record<string, any> {
-  const { hoverOffset = 2, ...restOpts } = opts;
-  const length: any = _.maxBy(_.values(series), "length")?.length;
-  if (!length || labels?.length !== length) return {};
-  return {
-    labels,
-    datasets: _.map(series, (val: Array<number>, key: string) => {
-      if (val?.length !== length) return;
-      const color =
-        colors?.length > 1
-          ? colors[_.keys(series).indexOf(key)] || "rgba(71, 183,132,.5)"
-          : colors[0];
-      const borderColor = `rgba(${_.trimStart(
-        _.trimEnd(color[0] === "#" ? hexToRGB(color, "1") : color, ")"),
-        "rgba("
-      )
-        .split(",")
-        .map((val: any, idx: number) => Math.max(idx < 3 ? +val / 1.25 : 1, 0))
-        .join(",")})`;
-      console.log({ color, borderColor });
-      return {
-        label: key,
-        data: val,
-        color: chartColors.textColor,
-        backgroundColor: color,
-        borderColor,
-        borderWidth: 3,
-      };
-    }),
-    hoverOffset,
-    ...restOpts,
-  };
-};
-
 export const chartColors = {
-  appColor: "#2B4162",
-  layerColor: "#385F71",
-  borderColor: "#518AA4",
-  textColor: "#F5F0F6",
-  accentColor: "#49A078",
-  hoverColor: "#81D986",
+  appColor: "#1e303c",
+  borderColor: "#374955",
+  textColor: "#e6f4f1",
+  primaryColor: "#008abb",
+  secondaryColor: "#ec9929",
+  tertiaryColor: "#009467",
+  quaternaryColor: "#cf5c5c",
 };
 
 export const chartOptions = {
@@ -81,4 +43,74 @@ export const chartOptions = {
       },
     },
   },
+};
+
+export const generateBorderColor = function (color: string): string {
+  return `rgba(${_.trimStart(
+    _.trimEnd(color[0] === "#" ? hexToRGB(color, "1") : color, ")"),
+    "rgba("
+  )
+    .split(",")
+    .map((val: any, idx: number) => Math.max(idx < 3 ? +val / 1.25 : 1, 0))
+    .join(",")})`;
+};
+
+export const generateChartProps = function (
+  type: string,
+  series: Record<string, Array<number>> = {},
+  labels: Array<any> = [],
+  colors: Array<string> = [],
+  opts: Record<string, any> = {},
+  options: Record<string, any> = chartOptions
+): Record<string, any> {
+  return {
+    type,
+    options,
+    data: generateChartData(series, labels, colors, opts, type),
+  };
+};
+
+export const generateChartData = function (
+  series: Record<string, Array<number>> = {},
+  labels: Array<any> = [],
+  colors: Array<string> = [],
+  opts: Record<string, any> = {},
+  type: string
+): Record<string, any> {
+  const { hoverOffset = 2, ...restOpts } = opts;
+  const length: any = _.maxBy(_.values(series), "length")?.length;
+  if (!length || labels?.length !== length) return {};
+  console.log({ series, labels, colors, type });
+  const isPie = (): boolean => type === "pie";
+  return {
+    labels,
+    datasets: _.map(series, (val: Array<number>, key: string) => {
+      if (val?.length !== length) return;
+      let color;
+      if (!isPie()) {
+        color =
+          colors?.length > 1
+            ? colors[_.keys(series).indexOf(key)] || "rgba(71, 183,132,.5)"
+            : colors[0];
+      }
+      return {
+        label: key,
+        data: val,
+        color: chartColors.textColor,
+        backgroundColor: isPie()
+          ? val.map((v: any, idx: number) => colors[idx] || colors[0])
+          : color,
+        borderColor: isPie()
+          ? val.map((v: any, idx: number) =>
+              colors[idx] !== undefined
+                ? generateBorderColor(colors[idx])
+                : generateBorderColor(colors[0])
+            )
+          : generateBorderColor(color as string),
+        borderWidth: 3,
+      };
+    }),
+    hoverOffset,
+    ...restOpts,
+  };
 };

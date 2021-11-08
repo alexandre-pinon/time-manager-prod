@@ -1,48 +1,93 @@
 <template>
-  <div class="navbar flex js-center">
+  <div v-if="isMinified" class="navbar navbar-minified shadow flex js-center">
     <Button
-      v-for="(link, idx) in links"
-      class="navbar-link"
-      :key="idx"
-      :to="link.to"
-      >{{ link.label }}</Button
+      class="navbar-shortcut"
+      icon
+      round
+      @click="() => (isMinified = false)"
     >
+      <MenuIcon />
+    </Button>
+  </div>
+  <div v-else class="navbar navbar-full flex js-between shadow">
+    <div class="navbar-links flex js-center">
+      <Button
+        v-for="(link, idx) in computedLinks"
+        class="navbar-link"
+        transparent
+        :key="idx"
+        :to="link.to"
+        >{{ link.label }}</Button
+      >
+    </div>
+    <div class="navbar-extras flex">
+      <Button
+        class="navbar-link"
+        icon
+        @click="() => $emit('toggle-user-modal')"
+      >
+        <UserIcon />
+      </Button>
+      <Button
+        class="navbar-link"
+        negative
+        icon
+        @click="() => (isMinified = true)"
+      >
+        <XIcon />
+      </Button>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Vue from "vue";
 
+import { mapState } from "vuex";
+
+import { UserIcon, MenuIcon, XIcon } from "vue-feather-icons";
 import { Button } from "@/components/global";
 
 export default Vue.extend({
   name: "tm-navbar",
-  components: { Button },
+  components: { Button, UserIcon, MenuIcon, XIcon },
   data() {
     return {
-      links: [
+      isMinified: true,
+    };
+  },
+  computed: {
+    computedLinks: function (): Array<Record<string, any>> {
+      const { id: userId } = this?.currentUser || {};
+      return [
         {
-          to: "/",
+          to: `/${userId}`,
           label: "Home",
         },
+        // {
+        //   to: `/workingtimes/${userId}`,
+        //   label: "Working Times",
+        // },
+        // {
+        //   to: `/workingtime/${userId}`,
+        //   label: "Working Time",
+        // },
+        // {
+        //   to: `/workingtime/${userId}/:workingTimeId`,
+        //   label: "Working Time",
+        // },
         {
-          to: "/workingtimes/:userId",
-          label: "Working Times",
+          to: `/clock/${userId}`,
+          label: "Clock",
         },
-        {
-          to: "/workingtime/:userId",
-          label: "Working Time",
-        },
-        {
-          to: "/workingtime/:userId/:workingTimeId",
-          label: "Working Time",
-        },
-        {
-          to: "/chartManager/:userId/",
-          label: "Charts",
-        },
-      ],
-    };
+        // {
+        //   to: `/chartmanager/${userId}`,
+        //   label: "Charts",
+        // },
+      ];
+    },
+    ...mapState(["currentUser"]),
   },
 });
 </script>
@@ -50,12 +95,21 @@ export default Vue.extend({
 <style lang="scss">
 div.application {
   .navbar {
-    height: 80px;
-    width: 100vw;
-    background: $layer-color;
     position: absolute;
     top: 0;
-    left: 0;
+    &-full {
+      padding-left: 80px;
+      padding-right: 80px;
+      top: 0;
+      height: 80px;
+      width: 100vw;
+    }
+    &-minified {
+      right: 80px;
+      padding: 16px;
+      border-bottom-left-radius: 50%;
+      border-bottom-right-radius: 50%;
+    }
     &-link {
       margin: 8px;
     }

@@ -1,9 +1,17 @@
 <template>
   <div id="app" class="application">
-    <Navbar />
-    <!-- <User /> -->
+    <Navbar @toggle-user-modal="() => (showUserModal = !showUserModal)" />
     <div class="application-view">
-      <router-view />
+      <Modal
+        v-show="showUserModal"
+        @close-modal="() => (showUserModal = false)"
+      >
+        <User />
+      </Modal>
+      <div class="flex application-view-wrapper">
+        <router-view class="application-side" name="side" />
+        <router-view class="application-content" name="content" />
+      </div>
     </div>
   </div>
 </template>
@@ -12,37 +20,59 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-this-alias */
 import Vue from "vue";
-import VueRouter from "vue-router";
+import VueRouter, { Route, NavigationGuardNext } from "vue-router";
 
 import { store } from "@/store";
 import { router } from "@/router";
 
-// import { User } from "@/components";
-import { Navbar } from "@/components";
+import { Navbar, User } from "@/components";
+import { Modal } from "@/components/global";
 
 Vue.use(VueRouter);
+
+router.beforeEach((to: Route, from: Route, next: NavigationGuardNext<Vue>) => {
+  const tempIsAuthOk = true;
+  if (to?.name !== "Login" && !tempIsAuthOk) next("/login");
+  else next();
+});
 
 export default Vue.extend({
   name: "App",
   store,
   router,
   components: {
-    // User,
+    User,
     Navbar,
+    Modal,
+  },
+  data() {
+    return {
+      showUserModal: false,
+    };
+  },
+  watch: {
+    showUserModal(val: any) {
+      console.log({ show: val });
+    },
   },
 });
 </script>
 
 <style lang="scss">
 html {
-  background: $app-color;
+  background: $color-background;
+  ::-webkit-scrollbar {
+    display: none;
+    width: 0px;
+    background: transparent;
+  }
 }
 div.application {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: $text-color;
+  color: $color-text;
   margin-top: 96px;
 
   &-view {
@@ -61,6 +91,10 @@ div.application {
     flex-wrap: wrap;
   }
 
+  .f-column {
+    flex-direction: column;
+  }
+
   .js-around {
     justify-content: space-around;
   }
@@ -75,6 +109,20 @@ div.application {
 
   .js-center {
     justify-content: center;
+  }
+
+  .js-end {
+    justify-content: end;
+  }
+
+  // ANCHOR CSS Helpers - Colors
+  .shadow {
+    box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.25);
+  }
+
+  // ANCHOR CSS Helpers - Misc
+  .pointer {
+    cursor: pointer;
   }
 }
 
