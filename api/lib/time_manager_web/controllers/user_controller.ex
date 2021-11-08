@@ -4,6 +4,12 @@ defmodule TimeManagerAPIWeb.UserController do
   alias TimeManagerAPI.TimeManagerData
   alias TimeManagerAPI.TimeManagerData.User
 
+  plug TimeManagerAPIWeb.EnsureRolePlug,
+       [roles: "admin", check_self: true] when action in [:create, :update, :delete]
+
+  plug TimeManagerAPIWeb.EnsureRolePlug,
+       [roles: "admin"] when action in [:set_role]
+
   action_fallback TimeManagerAPIWeb.FallbackController
 
   def index(conn, %{"email" => email, "username" => username}) do
@@ -44,6 +50,14 @@ defmodule TimeManagerAPIWeb.UserController do
     user = TimeManagerData.get_user!(id)
 
     with {:ok, %User{} = user} <- TimeManagerData.update_user(user, user_params) do
+      render(conn, "show.json", user: user)
+    end
+  end
+
+  def set_role(conn, %{"id" => id, "role" => role}) do
+    user = TimeManagerData.get_user!(id)
+
+    with {:ok, %User{} = user} <- TimeManagerData.set_role(user, role) do
       render(conn, "show.json", user: user)
     end
   end

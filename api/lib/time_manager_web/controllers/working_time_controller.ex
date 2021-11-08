@@ -4,6 +4,9 @@ defmodule TimeManagerAPIWeb.WorkingTimeController do
   alias TimeManagerAPI.TimeManagerData
   alias TimeManagerAPI.TimeManagerData.WorkingTime
 
+  plug TimeManagerAPIWeb.EnsureRolePlug,
+       [roles: "admin"] when action in [:update, :delete]
+
   action_fallback TimeManagerAPIWeb.FallbackController
 
   def index(conn, %{"userID" => userID, "start" => start, "end" => endd}) do
