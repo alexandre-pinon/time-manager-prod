@@ -1,4 +1,4 @@
-FROM node:lts-alpine as build-stage
+FROM node:16 as build-stage
 
 # install JQ to replace config.json values
 ENV JQ_VERSION=1.6
@@ -18,7 +18,11 @@ COPY . .
 RUN jq 'to_entries | map_values({ (.key) : ("$" + .key) }) | reduce .[] as $item ({}; . + $item)' ./src/config.json > ./src/config.tmp.json && mv ./src/config.tmp.json ./src/config.json
 
 # install project dependencies & build app for production with minification
-RUN npm install && npm run build
+RUN rm package-lock.json
+
+RUN npm install
+
+RUN npm run build
 
 
 
