@@ -4,6 +4,9 @@ defmodule TimeManagerAPIWeb.TeamController do
   alias TimeManagerAPI.TimeManagerData
   alias TimeManagerAPI.TimeManagerData.Team
 
+  plug TimeManagerAPIWeb.EnsureRolePlug,
+       [roles: ["admin", "manager"], check_self: true] when action in [:create, :update, :delete]
+
   action_fallback TimeManagerAPIWeb.FallbackController
 
   def index(conn, _params) do

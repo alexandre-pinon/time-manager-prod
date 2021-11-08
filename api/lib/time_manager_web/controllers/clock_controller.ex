@@ -4,6 +4,9 @@ defmodule TimeManagerAPIWeb.ClockController do
   alias TimeManagerAPI.TimeManagerData
   alias TimeManagerAPI.TimeManagerData.Clock
 
+  plug TimeManagerAPIWeb.EnsureRolePlug,
+       [roles: "admin", check_self: true] when action in [:create, :update]
+
   action_fallback TimeManagerAPIWeb.FallbackController
 
   def index(conn, _params) do

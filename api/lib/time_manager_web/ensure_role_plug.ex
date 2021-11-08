@@ -46,6 +46,10 @@ defmodule TimeManagerAPIWeb.EnsureRolePlug do
 
   defp is_self?(true, _private, _params), do: true
   defp is_self?(_any, %{user_id: user_id}, %{"id" => id}), do: Integer.to_string(user_id) === id
+
+  defp is_self?(_any, %{user_id: user_id}, %{"userID" => userID}),
+    do: Integer.to_string(user_id) === userID # For Clock routes
+
   defp is_self?(_any, _private, _params), do: false
 
   defp maybe_halt(true, conn), do: conn
