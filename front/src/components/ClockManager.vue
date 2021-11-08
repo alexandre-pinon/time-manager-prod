@@ -24,16 +24,15 @@
 
 <script lang="ts">
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Vue from "vue";
+import mixins from "vue-typed-mixins";
 import moment, { Moment } from "moment";
-
 import { mapState } from "vuex";
 
-import api from "@/utils/api";
 import { chainPromises } from "@/utils/helpers";
 import { Card, Button } from "@/components/global";
+import { API } from "@/mixins";
 
-export default Vue.extend({
+export default mixins(API).extend({
   name: "tm-clock-manager",
   components: { Card, Button },
   data() {
@@ -67,10 +66,10 @@ export default Vue.extend({
       // clearInterval(this.timer);
       // this.time = moment().startOf("date").format("HH:mm:ss");
       const { computedUserId } = this;
-      let { data: clock } = (await api.getClock(1)) || {};
+      let { data: clock } = (await this.getSingleClock(1)) || {};
       if (!clock)
         clock = (
-          (await api.createClock(
+          (await this.createClock(
             1,
             moment().format("YYYY-MM-DD HH:mm:ss"),
             false
@@ -101,12 +100,12 @@ export default Vue.extend({
       this.clockIn = !this.clockIn;
       this.startDateTime = newTime;
       console.log({ oldTime, newTime });
-      api.updateClock(1, {
+      this.updateClock(1, {
         time: newTime.format("YYYY-MM-DD HH:mm:ss"),
         status: this.clockIn,
       });
       if (!this.clockIn)
-        api.createWorkingTime(
+        this.createWorkingTime(
           1,
           oldTime.format("YYYY-MM-DD HH:mm:ss"),
           newTime.format("YYYY-MM-DD HH:mm:ss")
@@ -119,8 +118,8 @@ export default Vue.extend({
       };
 
       const [clockData, workingTimeData] = await chainPromises([
-        api.updateClock(userId, clock),
-        api.createWorkingTime(userId, time, time),
+        this.updateClock(userId, clock),
+        this.createWorkingTime(userId, time, time),
       ]);
       this.currentWorkingTimeId = workingTimeData.id;
       console.log(clockData, workingTimeData, time);
@@ -134,8 +133,8 @@ export default Vue.extend({
       const workingTime = { end: formatedTime };
 
       const res = await chainPromises([
-        api.updateClock(id, clock),
-        api.updateWorkingTime(id, workingTime),
+        this.updateClock(id, clock),
+        this.updateWorkingTime(id, workingTime),
       ]);
       console.log(res);
     },

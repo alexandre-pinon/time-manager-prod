@@ -10,16 +10,15 @@
 
 <script lang="ts">
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Vue from "vue";
+import mixins from "vue-typed-mixins";
 import _ from "lodash";
 import moment from "moment";
 
 import { chartColors, chartOptions, generateChartProps } from "@/utils/charts";
-import api from "@/utils/api";
-
 import { Chart } from "@/components/atoms";
+import { API } from "@/mixins";
 
-export default Vue.extend({
+export default mixins(API).extend({
   name: "tm-chart-manager",
   components: { Chart },
   data() {
@@ -116,7 +115,7 @@ export default Vue.extend({
   methods: {
     async loadWorkingTimes() {
       const tmpUserId = 1;
-      const WT = await api.getWorkingTimes(tmpUserId);
+      const WT = await this.getWorkingTimes(tmpUserId);
       this.$set(this, "allWorkingTimes", WT);
     },
   },

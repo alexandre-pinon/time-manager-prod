@@ -7,6 +7,7 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
   state: {
     currentUser: {},
+    token: "",
   },
   mutations: {
     setUser: function (state: any, value: any) {
@@ -19,6 +20,9 @@ export const store = new Vuex.Store({
         team = "",
       } = value;
       state.currentUser = { id, username, firstname, lastname, role, team };
+    },
+    setToken: function (state: any, value: string) {
+      state.token = value;
     },
   },
 });
