@@ -76,6 +76,7 @@ export default mixins(API).extend({
           )) || {}
         )?.data;
       console.log({ clock });
+      if (!clock) return;
       const { time, status } = clock;
       this.startDateTime = moment(time);
       this.clockIn = status;

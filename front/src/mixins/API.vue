@@ -40,22 +40,21 @@ export default Vue.extend({
     async signIn(email: string, password: string): Promise<any> {
       const { computedUrl } = this;
       console.log("signIn");
-      const result = axios
+      return await axios
         .post(`${computedUrl}/users/sign_in`, { user: { email, password } })
         .then((result: any) => result?.data)
         .catch((err: any) => handleError("signIn", err));
-      console.log({ result });
     },
     async signUp(
+      email: string,
       firstName: string,
       lastName: string,
-      email: string,
       password: string,
       passwordConfirm: string
     ): Promise<any> {
       const { computedUrl } = this;
       console.log("signUp");
-      const result = axios
+      return await axios
         .post(`${computedUrl}/users/sign_up`, {
           user: {
             email,
@@ -68,49 +67,65 @@ export default Vue.extend({
         })
         .then((result: any) => result?.data)
         .catch((err: any) => handleError("signUp", err));
-      console.log({ result });
     },
 
     // ANCHOR - User routes
     async getAllUsers(): Promise<any> {
-      const { computedUrl } = this;
+      const { computedHeaders, computedUrl } = this;
       console.log("getUsers");
       return await axios
-        .get(`${computedUrl}/users`)
+        .get(`${computedUrl}/users`, computedHeaders)
         .then((result: any) => result?.data)
         .catch((err: any) => handleError("getUsers", err));
     },
     async getSingleUser(id: number): Promise<any> {
-      const { computedUrl } = this;
+      const { computedHeaders, computedUrl } = this;
       console.log("getSingleUser : ", id);
       return await axios
-        .get(`${computedUrl}/users/${id}`)
+        .get(`${computedUrl}/users/${id}`, computedHeaders)
         .then((result: any) => result?.data)
         .catch((err: any) => handleError("getSingleUser", err));
     },
     async createUser(username: string, email: string): Promise<any> {
-      const { computedUrl } = this;
+      const { computedHeaders, computedUrl } = this;
       console.log("createUser : ", username, email);
       return await axios
-        .post(`${computedUrl}/users`, { user: { username, email } })
+        .post(
+          `${computedUrl}/users`,
+          { user: { username, email } },
+          computedHeaders
+        )
         .then((result: any) => result?.data)
         .catch((err: any) => handleError("createUser", err));
     },
     async updateUser(id: number, user: any): Promise<any> {
-      const { computedUrl } = this;
+      const { computedHeaders, computedUrl } = this;
       console.log("updateUser : ", id, user);
       return await axios
-        .put(`${computedUrl}/users/${id}`, { user })
+        .put(`${computedUrl}/users/${id}`, { user }, computedHeaders)
         .then((result: any) => result?.data)
         .catch((err: any) => handleError("updateUser", err));
     },
     async deleteUser(id: number): Promise<any> {
-      const { computedUrl } = this;
+      const { computedHeaders, computedUrl } = this;
       console.log("deleteUser : ", id);
       return await axios
-        .delete(`${computedUrl}/users/${id}`)
+        .delete(`${computedUrl}/users/${id}`, computedHeaders)
         .then((result: any) => result?.data)
         .catch((err: any) => handleError("deleteUser", err));
+    },
+    async updateRole(id: number, role: string): Promise<any> {
+      const { computedHeaders, computedUrl } = this;
+      console.log("updateRole : ", id);
+      if (!["user", "manager", "admin"].includes(role)) return;
+      return await axios
+        .put(
+          `${computedUrl}/users/set_role/${id}`,
+          { user: { role } },
+          computedHeaders
+        )
+        .then((result: any) => result?.data)
+        .catch((err: any) => handleError("updateRole", err));
     },
 
     // ANCHOR - Working times routes
@@ -119,7 +134,7 @@ export default Vue.extend({
       start: any = undefined,
       end: any = undefined
     ): Promise<any> {
-      const { computedUrl } = this;
+      const { computedHeaders, computedUrl } = this;
       console.log("getWorkingTimes : ", userId, start, end);
       // params here is directly stringified as needed by the API
       // > _.omitBy(...) removes all values from an object for which the callback returns true
@@ -136,15 +151,15 @@ export default Vue.extend({
             ).join("&")
           : "";
       return await axios
-        .get(`${computedUrl}/workingtimes/${userId}${params}`)
+        .get(`${computedUrl}/workingtimes/${userId}${params}`, computedHeaders)
         .then((result: any) => result?.data)
         .catch((err: any) => handleError("getWorkingTimes", err));
     },
     async getSingleWorkingTime(userId: number, id: number): Promise<any> {
-      const { computedUrl } = this;
+      const { computedHeaders, computedUrl } = this;
       console.log("getSingleWorkingTime : ", userId, id);
       return await axios
-        .get(`${computedUrl}/workingtimes/${userId}/${id}`)
+        .get(`${computedUrl}/workingtimes/${userId}/${id}`, computedHeaders)
         .then((result: any) => result?.data)
         .catch((err: any) => handleError("getSingleWorkingTime", err));
     },
@@ -153,41 +168,49 @@ export default Vue.extend({
       start: string,
       end: string
     ): Promise<any> {
-      const { computedUrl } = this;
+      const { computedHeaders, computedUrl } = this;
       console.log("createWorkingTime : ", userId, start, end);
       return await axios
-        .post(`${computedUrl}/workingtimes/${userId}`, {
-          working_time: {
-            start: moment(start).format("YYYY-MM-DD HH:mm:ss"),
-            end: moment(end).format("YYYY-MM-DD HH:mm:ss"),
+        .post(
+          `${computedUrl}/workingtimes/${userId}`,
+          {
+            working_time: {
+              start: moment(start).format("YYYY-MM-DD HH:mm:ss"),
+              end: moment(end).format("YYYY-MM-DD HH:mm:ss"),
+            },
           },
-        })
+          computedHeaders
+        )
         .then((result: any) => result?.data)
         .catch((err: any) => handleError("createWorkingTime", err));
     },
     async updateWorkingTime(id: number, workingTime: any): Promise<any> {
-      const { computedUrl } = this;
+      const { computedHeaders, computedUrl } = this;
       console.log("updateWorkingTime : ", id, workingTime);
       return await axios
-        .put(`${computedUrl}/workingtimes/${id}`, { working_time: workingTime })
+        .put(
+          `${computedUrl}/workingtimes/${id}`,
+          { working_time: workingTime },
+          computedHeaders
+        )
         .then((result: any) => result?.data)
         .catch((err: any) => handleError("updateWorkingTime", err));
     },
     async deleteWorkingTime(id: number): Promise<any> {
-      const { computedUrl } = this;
+      const { computedHeaders, computedUrl } = this;
       console.log("deleteWorkingTime : ", id);
       return await axios
-        .delete(`${computedUrl}/workingtimes/${id}`)
+        .delete(`${computedUrl}/workingtimes/${id}`, computedHeaders)
         .then((result: any) => result?.data)
         .catch((err: any) => handleError("deleteWorkingTime", err));
     },
 
     // ANCHOR - Clock routes
     async getSingleClock(userId: number): Promise<any> {
-      const { computedUrl } = this;
+      const { computedHeaders, computedUrl } = this;
       console.log("getSingleClock : ", userId);
       return await axios
-        .get(`${computedUrl}/clocks/${userId}`)
+        .get(`${computedUrl}/clocks/${userId}`, computedHeaders)
         .then((result: any) => result?.data)
         .catch((err: any) => handleError("getSingleClock", err));
     },
@@ -196,22 +219,84 @@ export default Vue.extend({
       time: string,
       status: boolean
     ): Promise<any> {
-      const { computedUrl } = this;
+      const { computedHeaders, computedUrl } = this;
       console.log("createClock : ", userId, time, status);
       return await axios
-        .post(`${computedUrl}/clocks/${userId}`, {
-          clock: { time: moment(time).format("YYYY-MM-DD HH:mm:ss"), status },
-        })
+        .post(
+          `${computedUrl}/clocks/${userId}`,
+          {
+            clock: { time: moment(time).format("YYYY-MM-DD HH:mm:ss"), status },
+          },
+          computedHeaders
+        )
         .then((result: any) => result?.data)
         .catch((err: any) => handleError("createClock", err));
     },
     async updateClock(userId: number, clock: any): Promise<any> {
-      const { computedUrl } = this;
+      const { computedHeaders, computedUrl } = this;
       console.log("updateClock : ", userId, clock);
       return await axios
-        .put(`${computedUrl}/clocks/${userId}`, { clock })
+        .put(`${computedUrl}/clocks/${userId}`, { clock }, computedHeaders)
         .then((result: any) => result?.data)
         .catch((err: any) => handleError("updateClock", err));
+    },
+
+    // ANCHOR - Teams routes
+    async getAllTeams(): Promise<void> {
+      const { computedHeaders, computedUrl } = this;
+      console.log("getTeams");
+      return await axios
+        .get(`${computedUrl}/teams`, computedHeaders)
+        .then((result: any) => result?.data)
+        .catch((err: any) => handleError("getTeams", err));
+    },
+    async getSingleTeam(id: number): Promise<void> {
+      const { computedHeaders, computedUrl } = this;
+      console.log("getSingleTeam : ", id);
+      return await axios
+        .get(`${computedUrl}/teams/${id}`, computedHeaders)
+        .then((result: any) => result?.data)
+        .catch((err: any) => handleError("getSingleTeam", err));
+    },
+    async getUserTeams(userId: number): Promise<void> {
+      const { computedHeaders, computedUrl } = this;
+      console.log("getUserTeams : ", userId);
+      return await axios
+        .get(`${computedUrl}/teams/users/${userId}`, computedHeaders)
+        .then((result: any) => result?.data)
+        .catch((err: any) => handleError("getUserTeams", err));
+    },
+    async createTeam(name: string): Promise<any> {
+      const { computedHeaders, computedUrl } = this;
+      console.log("createTeam : ", name);
+      return await axios
+        .post(
+          `${computedUrl}/teams`,
+          {
+            team: {
+              name,
+            },
+          },
+          computedHeaders
+        )
+        .then((result: any) => result?.data)
+        .catch((err: any) => handleError("createTeam", err));
+    },
+    async updateTeam(id: number, team: any): Promise<any> {
+      const { computedHeaders, computedUrl } = this;
+      console.log("updateTeam : ", id, team);
+      return await axios
+        .put(`${computedUrl}/teams/${id}`, { team }, computedHeaders)
+        .then((result: any) => result?.data)
+        .catch((err: any) => handleError("updateTeam", err));
+    },
+    async deleteTeam(id: number): Promise<any> {
+      const { computedHeaders, computedUrl } = this;
+      console.log("deleteTeam : ", id);
+      return await axios
+        .delete(`${computedUrl}/teams/${id}`, computedHeaders)
+        .then((result: any) => result?.data)
+        .catch((err: any) => handleError("deleteTeam", err));
     },
   },
 });

@@ -22,15 +22,33 @@
     </div>
     <div class="navbar-extras flex">
       <Button
+        v-if="!isLoggedIn"
         class="navbar-link"
         icon
-        @click="() => $emit('toggle-user-modal')"
+        @click="() => $emit('toggle-signin-modal')"
       >
         <UserIcon />
       </Button>
       <Button
+        v-if="!isLoggedIn"
+        class="navbar-link"
+        icon
+        @click="() => $emit('toggle-signup-modal')"
+      >
+        <UserPlusIcon />
+      </Button>
+      <Button
+        v-if="isLoggedIn"
         class="navbar-link"
         negative
+        icon
+        @click="() => signOut()"
+      >
+        <UserXIcon />
+      </Button>
+      <Button
+        class="navbar-link"
+        transparent
         icon
         @click="() => (isMinified = true)"
       >
@@ -46,15 +64,21 @@ import Vue from "vue";
 
 import { mapState } from "vuex";
 
-import { UserIcon, MenuIcon, XIcon } from "vue-feather-icons";
+import {
+  UserIcon,
+  UserXIcon,
+  UserPlusIcon,
+  MenuIcon,
+  XIcon,
+} from "vue-feather-icons";
 import { Button } from "@/components/global";
 
 export default Vue.extend({
   name: "tm-navbar",
-  components: { Button, UserIcon, MenuIcon, XIcon },
+  components: { Button, UserIcon, UserPlusIcon, UserXIcon, MenuIcon, XIcon },
   data() {
     return {
-      isMinified: true,
+      isMinified: localStorage.getItem("token"),
     };
   },
   computed: {
@@ -62,7 +86,7 @@ export default Vue.extend({
       const { id: userId } = this?.currentUser || {};
       return [
         {
-          to: `/${userId}`,
+          to: `/home/${userId}`,
           label: "Home",
         },
         // {
@@ -87,7 +111,14 @@ export default Vue.extend({
         // },
       ];
     },
-    ...mapState(["currentUser"]),
+    ...mapState(["currentUser", "isLoggedIn"]),
+  },
+  methods: {
+    signOut: function () {
+      localStorage.setItem("token", "");
+      this.$store.dispatch("updateAuthStatus");
+      this.$router.push("/login");
+    },
   },
 });
 </script>
