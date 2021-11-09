@@ -5,6 +5,7 @@ import ClockManager from "./ClockManager.vue";
 import ChartManager from "./ChartManager.vue";
 import Home from "./Home.vue";
 import Navbar from "./Navbar.vue";
+import Offline from "./Offline.vue"
 
 export {
   Home,
@@ -14,4 +15,5 @@ export {
   ClockManager,
   ChartManager,
   Navbar,
+  Offline
 };

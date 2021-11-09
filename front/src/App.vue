@@ -18,10 +18,14 @@
       >
         <SignIn @sign-in="() => (showSignInModal = false)" />
       </Modal>
-      <div class="flex application-view-wrapper">
+
+      <div class="flex application-view-wrapper" v-if="isOnline">
         <router-view class="application-side" name="side" />
         <router-view class="application-content" name="content" />
       </div>
+      <Offline v-else />
+
+
     </div>
   </div>
 </template>
@@ -35,7 +39,7 @@ import VueRouter, { Route, NavigationGuardNext } from "vue-router";
 import { store } from "@/store";
 import { router } from "@/router";
 
-import { Navbar } from "@/components";
+import { Navbar, User, Offline } from "@/components";
 import { Modal } from "@/components/global";
 import { SignUp, SignIn } from "@/components/forms";
 
@@ -55,6 +59,7 @@ export default Vue.extend({
     Modal,
     SignUp,
     SignIn,
+    Offline
   },
   data() {
     return {
@@ -64,6 +69,19 @@ export default Vue.extend({
   },
   created() {
     this.$store.dispatch("updateAuthStatus");
+  },
+  computed: {
+    isOnline: function () {
+      return navigator.onLine;
+    },
+  },
+  watch: {
+    showUserModal(val: any) {
+      console.log({ show: val });
+    },
+    // InternetConnection() {
+    //   console.log({connectionStatus})
+    // }
   },
 });
 </script>
