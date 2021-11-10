@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pr-tfw-ingress
+spec:
+  # tls:
+  #   - hosts:
+  #       - ai-doc-domain.com
+  #     secretName: ai-doc-secret-tls
+  rules:
+    # - host: ai-doc-domain.com
+    - http:
+        paths:
+          - path: /api
+            backend:
+              service:
+                name: api-service
+                port:
+                  number: 4000
+          - path: /front
+            backend:
+              service:
+                name: front-service
+                port:
+                  number: 80
