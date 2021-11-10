@@ -47,7 +47,7 @@ export default Vue.extend({
     refreshChart: function (): any {
       const { type, data, options, chartId, chart, updated } = this;
       if (updated) return;
-      console.log("REFRESH ", chartId, { type, data, options, chartId, chart });
+      // console.log("REFRESH ", chartId, { type, data, options, chartId, chart });
       const context: HTMLCanvasElement = document.getElementById(
         chartId
       ) as HTMLCanvasElement;

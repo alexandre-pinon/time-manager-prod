@@ -66,16 +66,15 @@ export default mixins(API).extend({
       // clearInterval(this.timer);
       // this.time = moment().startOf("date").format("HH:mm:ss");
       const { computedUserId } = this;
-      let { data: clock } = (await this.getSingleClock(1)) || {};
+      let { data: clock } = (await this.getSingleClock(computedUserId)) || {};
       if (!clock)
         clock = (
           (await this.createClock(
-            1,
+            computedUserId,
             moment().format("YYYY-MM-DD HH:mm:ss"),
             false
           )) || {}
         )?.data;
-      console.log({ clock });
       if (!clock) return;
       const { time, status } = clock;
       this.startDateTime = moment(time);
@@ -100,14 +99,13 @@ export default mixins(API).extend({
       const [oldTime, newTime] = [startDateTime, moment()];
       this.clockIn = !this.clockIn;
       this.startDateTime = newTime;
-      console.log({ oldTime, newTime });
-      this.updateClock(1, {
+      this.updateClock(computedUserId, {
         time: newTime.format("YYYY-MM-DD HH:mm:ss"),
         status: this.clockIn,
       });
       if (!this.clockIn)
         this.createWorkingTime(
-          1,
+          computedUserId,
           oldTime.format("YYYY-MM-DD HH:mm:ss"),
           newTime.format("YYYY-MM-DD HH:mm:ss")
         );
@@ -123,7 +121,6 @@ export default mixins(API).extend({
         this.createWorkingTime(userId, time, time),
       ]);
       this.currentWorkingTimeId = workingTimeData.id;
-      console.log(clockData, workingTimeData, time);
     },
     endRecordTime: async function (id: number, time: string) {
       const formatedTime = moment(time).format("YYYY-MM-DD HH:mm:ss");
@@ -137,7 +134,6 @@ export default mixins(API).extend({
         this.updateClock(id, clock),
         this.updateWorkingTime(id, workingTime),
       ]);
-      console.log(res);
     },
   },
 });

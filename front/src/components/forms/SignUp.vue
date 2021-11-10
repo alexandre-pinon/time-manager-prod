@@ -73,7 +73,7 @@ export default mixins(API).extend({
   methods: {
     submit: async function () {
       const { email, firstName, lastName, password, passwordConfirm } = this;
-      const { token } =
+      const { token, id } =
         (await this.signUp(
           email,
           firstName,
@@ -81,10 +81,9 @@ export default mixins(API).extend({
           password,
           passwordConfirm
         )) || {};
-      if (!token) return;
-      localStorage.setItem("token", token);
-      this.$store.dispatch("updateAuthStatus");
-      this.$router.push("/home/TODO");
+      if (!token || !id) return;
+      await this.$store.dispatch("updateAuthStatus", { token, id });
+      this.$router.push(`/home/${id}`);
       this.$emit("sign-up");
     },
   },

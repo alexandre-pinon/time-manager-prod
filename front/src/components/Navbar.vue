@@ -114,9 +114,8 @@ export default Vue.extend({
     ...mapState(["currentUser", "isLoggedIn"]),
   },
   methods: {
-    signOut: function () {
-      localStorage.setItem("token", "");
-      this.$store.dispatch("updateAuthStatus");
+    signOut: async function () {
+      await this.$store.dispatch("removeAuthStatus");
       this.$router.push("/login");
     },
   },

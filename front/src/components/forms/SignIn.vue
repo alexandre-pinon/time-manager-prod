@@ -43,11 +43,10 @@ export default mixins(API).extend({
   methods: {
     submit: async function () {
       const { email, password } = this;
-      const { token } = (await this.signIn(email, password)) || {};
-      if (!token) return;
-      localStorage.setItem("token", token);
-      this.$store.dispatch("updateAuthStatus");
-      this.$router.push("/home/TODO");
+      const { token, id } = (await this.signIn(email, password))?.data || {};
+      if (!token || !id) return;
+      await this.$store.dispatch("updateAuthStatus", { token, id });
+      this.$router.push(`/home/${id}`);
       this.$emit("sign-in");
     },
   },

@@ -8,16 +8,9 @@ import moment from "moment";
 import { mapState } from "vuex";
 
 import { handleError } from "@/utils/helpers";
-import config from "@/config.json";
 
 export default Vue.extend({
   name: "tm-api-mixin",
-  data() {
-    return {
-      url: "http://localhost",
-      port: "4000",
-    };
-  },
   computed: {
     computedUrl: function (): string {
       const { url, port } = this;
@@ -27,13 +20,7 @@ export default Vue.extend({
       const { token } = this;
       return { headers: { Authorization: token } };
     },
-    ...mapState(["currentUser", "token"]),
-  },
-  created() {
-    if (process?.env?.NODE_ENV === "production") {
-      this.url = `http://${config?.API_HOST || "localhost"}`;
-      this.port = config?.API_PORT || "4000";
-    }
+    ...mapState(["currentUser", "token", "url", "port"]),
   },
   methods: {
     // ANCHOR - Auth routes
