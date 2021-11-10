@@ -1,5 +1,5 @@
 # Extend from the official Elixir image
-FROM elixir:latest
+FROM elixir:1.12.2
 
 RUN apt-get update && \ 
     apt-get install -y postgresql-client

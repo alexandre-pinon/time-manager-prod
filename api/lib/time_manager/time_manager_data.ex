@@ -43,7 +43,7 @@ defmodule TimeManagerAPI.TimeManagerData do
   end
 
   def list_users do
-    Repo.all(User)
+    Repo.all(User) |> Repo.preload(:teams)
   end
 
   @doc """
@@ -60,7 +60,7 @@ defmodule TimeManagerAPI.TimeManagerData do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user!(id), do: Repo.get!(User, id) |> Repo.preload(:teams)
 
   @doc """
   Creates a user.

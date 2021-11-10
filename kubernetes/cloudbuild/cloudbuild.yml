@@ -1,0 +1,54 @@
+steps:
+  # Docker Build
+  - id: "Build images 🔨"
+    name: "gcr.io/$PROJECT_ID/docker-compose"
+    args: ["-f", "${_CLOUDBUILD_DIR}/docker-compose.yml", "build"]
+    env:
+      - "_API_IMAGE_FULLNAME=${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPO}/${_API_IMAGE_NAME}:${_TAG}"
+      - "_FRONT_IMAGE_FULLNAME=${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPO}/${_FRONT_IMAGE_NAME}:${_TAG}"
+
+  # Docker Push
+  - id: "Push api image to GCP ☁️"
+    name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "push",
+        "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPO}/${_API_IMAGE_NAME}:${_TAG}",
+      ]
+
+  - id: "Push front image to GCP ☁️"
+    name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "push",
+        "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPO}/${_FRONT_IMAGE_NAME}:${_TAG}",
+      ]
+
+  # Replace image names in pipeline
+  - id: "Replace image name with some black magic 🧙"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
+    entrypoint: "bash"
+    args: ["${_CLOUDBUILD_DIR}/envsubst.sh", "${_CLOUDBUILD_DIR}/pipeline.yml"]
+    env:
+      - "_API_IMAGE_FULLNAME=${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPO}/${_API_IMAGE_NAME}:${_TAG}"
+      - "_FRONT_IMAGE_FULLNAME=${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPO}/${_FRONT_IMAGE_NAME}:${_TAG}"
+
+  # Deploy kubernetes ressources to GKE
+  - id: "Apply deployments 🚀"
+    name: "gcr.io/cloud-builders/gke-deploy"
+    args:
+      - run
+      - --filename=${_CLOUDBUILD_DIR}/pipeline.yml
+      - --location=${_LOCATION}
+      - --cluster=${_CLUSTER_NAME}
+
+timeout: 1200s
+
+substitutions:
+  _CLOUDBUILD_DIR: kubernetes/cloudbuild
+  _CLUSTER_NAME: pr-ftw-cluster
+  _LOCATION: europe-west1
+  _ARTIFACT_REPO: pr-ftw-repo
+  _API_IMAGE_NAME: time-manager-api
+  _FRONT_IMAGE_NAME: time-manager-front
+  _TAG: "1.0"

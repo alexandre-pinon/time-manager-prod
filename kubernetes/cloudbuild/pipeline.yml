@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: europe-west1-docker.pkg.dev/timemanager-330510/pr-ftw-repo/time-manager-api:1.0
+          image: ${_API_IMAGE_FULLNAME}
           imagePullPolicy: Always
           ports:
             - containerPort: 4000
@@ -73,7 +73,7 @@ spec:
     spec:
       containers:
         - name: front
-          image: europe-west1-docker.pkg.dev/timemanager-330510/pr-ftw-repo/time-manager-front:1.0
+          image: ${_FRONT_IMAGE_FULLNAME}
           imagePullPolicy: Always
           ports:
             - containerPort: 80

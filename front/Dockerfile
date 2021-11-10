@@ -18,8 +18,6 @@ COPY . .
 RUN jq 'to_entries | map_values({ (.key) : ("$" + .key) }) | reduce .[] as $item ({}; . + $item)' ./src/config.json > ./src/config.tmp.json && mv ./src/config.tmp.json ./src/config.json
 
 # install project dependencies & build app for production with minification
-RUN rm package-lock.json
-
 RUN npm install
 
 RUN npm run build
@@ -31,6 +29,8 @@ FROM nginx:1.17 as production-stage
 ENV JSFOLDER=/usr/share/nginx/html/js/app.*.js
 
 COPY ./entrypoint.sh /usr/bin/entrypoint.sh
+
+COPY ./nginx-custom.conf /etc/nginx/conf.d/default.conf
 
 RUN chmod +x /usr/bin/entrypoint.sh
 

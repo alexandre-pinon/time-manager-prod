@@ -15,7 +15,13 @@ defmodule TimeManagerAPIWeb.TeamView do
     %{
       id: team.id,
       name: team.name,
-      users: render_many(team.users, UserView, "user.json", as: :user)
+      users: render_many(team.users, UserView, "team.user.json", as: :user)
+    }
+  end
+  def render("user.team.json", %{team: team}) do
+    %{
+      id: team.id,
+      name: team.name,
     }
   end
 end
