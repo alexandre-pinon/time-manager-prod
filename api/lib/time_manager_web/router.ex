@@ -39,4 +39,6 @@ defmodule TimeManagerAPIWeb.Router do
 
     resources "/teams", TeamController, except: [:new, :edit]
   end
+
+  get "/", TimeManagerAPIWeb.DefaultController, :index
 end
