@@ -6,6 +6,8 @@ import {
   WorkingTime,
   ClockManager,
   ChartManager,
+  User,
+  Offline
 } from "@/components";
 
 const routes: Array<any> = [
@@ -66,6 +68,7 @@ const routes: Array<any> = [
     path: "*",
     redirect: "/home",
   },
+  { path: "/error", component: Offline, name: "offline mode"}
 ];
 
 export const router = new VueRouter({ routes, mode: "history" });

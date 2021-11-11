@@ -25,7 +25,7 @@ export default Vue.extend({
     ...mapState(["currentUser"]),
   },
   filters: {
-    pretty: function (value: object) {
+    pretty: function (value: Record<string,any>) {
       return Object.keys(value).length ? JSON.stringify(value, null, 2) : "";
     },
   },

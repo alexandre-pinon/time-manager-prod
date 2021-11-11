@@ -1,0 +1,235 @@
+.card-form,
+.card-result {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  padding: 16px;
+  text-align: center;
+  background-color: #f7f7f7;
+  transition: 0.3s;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.card-form:hover,
+.card-result:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+.card-form input,
+.card-result input {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+.card-form button,
+.card-result button {
+  background-color: #4caf50;
+  color: #fff;
+  width: 100%;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.card-form button:hover,
+.card-result button:hover {
+  background-color: #45a049;
+}
+.card-form button[disabled="disabled"],
+.card-result button[disabled="disabled"] {
+  background-color: #d8d8d8;
+  color: grey;
+}
+.card-form button[disabled="disabled"]:hover,
+.card-result button[disabled="disabled"]:hover {
+  background-color: #d8d8d8;
+}
+.card-result {
+  margin: 0 16px;
+}
+.flexible {
+  flex-grow: 1;
+}
+pre {
+  white-space: pre-wrap;
+  text-align: left;
+  font-size: large;
+  color: #2c3e50;
+  padding: 0 16px;
+}
+div.application .button {
+  background: #008abb;
+  border-radius: 4px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+div.application .button.button-round {
+  border-radius: 50%;
+}
+div.application .button.button-negative {
+  background: #ec9929;
+}
+div.application .button.button-negative:hover {
+  background: #ffa25c;
+}
+div.application .button.button-transparent {
+  background: transparent;
+}
+div.application .button.button-transparent:hover {
+  background: #374955;
+}
+div.application .button.button-small-content {
+  font-size: 12pt;
+}
+div.application .button-content {
+  color: #e6f4f1;
+  font-weight: 700;
+  font-size: 16pt;
+  text-decoration: none;
+}
+div.application .button-content-icon {
+  height: 24px;
+  width: 24px;
+}
+div.application .button:hover {
+  background: #00b1ce;
+}
+div.application .modal {
+  position: absolute;
+  overflow-y: scroll;
+  left: 0;
+  right: 0;
+  margin: auto;
+  padding: 16px;
+  max-width: 85vw;
+  max-height: 85vh;
+  border: 1px solid #374955;
+  border-radius: 4px;
+  background: #1e303c;
+  color: #e6f4f1;
+}
+div.application .modal-footer {
+  margin-top: 16px;
+}
+div.application .modal-button {
+  margin-left: 16px;
+}
+div.application .card {
+  border-radius: 4px;
+  padding: 16px;
+}
+div.application .clock-manager-content {
+  margin-top: 16px;
+}
+div.application .charts-cell {
+  padding: 8px;
+  width: 50%;
+  height: 250px;
+}
+div.application .charts-card {
+  border-radius: 4px;
+  height: 100%;
+}
+div.application .navbar {
+  position: absolute;
+  top: 0;
+}
+div.application .navbar-full {
+  padding-left: 80px;
+  padding-right: 80px;
+  top: 0;
+  height: 80px;
+  width: 100vw;
+}
+div.application .navbar-minified {
+  right: 80px;
+  padding: 16px;
+  border-bottom-left-radius: 50%;
+  border-bottom-right-radius: 50%;
+}
+div.application .navbar-link {
+  margin: 8px;
+}
+html {
+  background: #1e303c;
+}
+html ::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  background: transparent;
+}
+div.application {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #e6f4f1;
+  margin-top: 96px;
+}
+div.application-view {
+  margin: auto;
+  padding: auto;
+}
+div.application * {
+  box-sizing: border-box;
+}
+div.application .flex {
+  display: flex;
+  align-content: center;
+  flex-wrap: wrap;
+}
+div.application .f-column {
+  flex-direction: column;
+}
+div.application .js-around {
+  justify-content: space-around;
+}
+div.application .js-between {
+  justify-content: space-between;
+}
+div.application .js-even {
+  justify-content: space-evenly;
+}
+div.application .js-center {
+  justify-content: center;
+}
+div.application .js-end {
+  justify-content: end;
+}
+div.application .shadow {
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.25);
+}
+div.application .pointer {
+  cursor: pointer;
+}
+* {
+  box-sizing: border-box;
+}
+.row {
+  flex-wrap: wrap;
+  width: 100%;
+  margin: 20px 0;
+}
+.column,
+.row {
+  display: flex;
+  flex-direction: row;
+}
+.column {
+  width: 25%;
+  padding: 0 16px;
+}
+@media screen and (max-width: 992px) {
+  .column {
+    width: 50%;
+    margin-bottom: 20px;
+  }
+}
+@media screen and (max-width: 600px) {
+  .column {
+    width: 100%;
+  }
+}

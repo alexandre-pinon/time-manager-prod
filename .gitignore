@@ -9,3 +9,6 @@ package-lock.json
 
 # Service account keys
 /kubernetes/*service-account.*json
+
+cmd
+/tmp/
