@@ -7,22 +7,30 @@ steps:
       - "_API_IMAGE_FULLNAME=${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPO}/${_API_IMAGE_NAME}:${_TAG}"
       - "_FRONT_IMAGE_FULLNAME=${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPO}/${_FRONT_IMAGE_NAME}:${_TAG}"
 
+  # Clean old images of same tag
+  - id: "Clean previous images 🧹"
+    name: "gcr.io/cloud-builders/gcloud"
+    args:
+      - "artifacts"
+      - "docker"
+      - "images"
+      - "delete"
+      - "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPO}/${_API_IMAGE_NAME}:${_TAG}"
+      - "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPO}/${_FRONT_IMAGE_NAME}:${_TAG}"
+    waitFor: ["-"]
+
   # Docker Push
   - id: "Push api image to GCP ☁️"
     name: "gcr.io/cloud-builders/docker"
     args:
-      [
-        "push",
-        "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPO}/${_API_IMAGE_NAME}:${_TAG}",
-      ]
+      - "push"
+      - "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPO}/${_API_IMAGE_NAME}:${_TAG}"
 
   - id: "Push front image to GCP ☁️"
     name: "gcr.io/cloud-builders/docker"
     args:
-      [
-        "push",
-        "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPO}/${_FRONT_IMAGE_NAME}:${_TAG}",
-      ]
+      - "push"
+      - "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPO}/${_FRONT_IMAGE_NAME}:${_TAG}"
 
   # Replace image names in pipeline
   - id: "Replace image name with some black magic 🧙"

@@ -3,5 +3,5 @@ kind: ConfigMap
 metadata:
   name: api-config
 data:
-  api-host: "34.77.139.75"
-  api-port: "4000"
+  api-host: "pr-ftw-timemanager.ml"
+  api-port: "80"

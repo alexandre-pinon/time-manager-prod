@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pr-tfw-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: pr-ftw-ip
+    networking.gke.io/managed-certificates: pr-ftw-certificate
+    kubernetes.io/ingress.class: "gce"
+spec:
+  rules:
+    - host: pr-ftw-timemanager.ml
+    - http:
+        paths:
+          - path: /api/*
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: api-service
+                port:
+                  number: 4000
+          - path: /*
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: front-service
+                port:
+                  number: 80

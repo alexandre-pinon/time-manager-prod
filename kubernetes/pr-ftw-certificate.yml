@@ -1,0 +1,7 @@
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: pr-ftw-certificate
+spec:
+  domains:
+    - pr-ftw-timemanager.ml
