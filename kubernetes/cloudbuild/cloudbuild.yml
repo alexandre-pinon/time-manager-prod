@@ -1,23 +1,24 @@
 steps:
   # Docker Build
-  - id: "Build images 🔨"
-    name: "gcr.io/$PROJECT_ID/docker-compose"
-    args: ["-f", "${_CLOUDBUILD_DIR}/docker-compose.yml", "build"]
-    env:
-      - "_API_IMAGE_FULLNAME=${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPO}/${_API_IMAGE_NAME}:${_TAG}"
-      - "_FRONT_IMAGE_FULLNAME=${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPO}/${_FRONT_IMAGE_NAME}:${_TAG}"
-
-  # Clean old images of same tag
-  - id: "Clean previous images 🧹"
-    name: "gcr.io/cloud-builders/gcloud"
+  - id: "Build api image 🔨"
+    name: "gcr.io/cloud-builders/docker"
     args:
-      - "artifacts"
-      - "docker"
-      - "images"
-      - "delete"
+      - "build"
+      - "-t"
       - "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPO}/${_API_IMAGE_NAME}:${_TAG}"
+      - "api"
+    waitFor:
+      - "-"
+
+  - id: "Build front image 🔨"
+    name: "gcr.io/cloud-builders/docker"
+    args:
+      - "build"
+      - "-t"
       - "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPO}/${_FRONT_IMAGE_NAME}:${_TAG}"
-    waitFor: ["-"]
+      - "front"
+    waitFor:
+      - "-"
 
   # Docker Push
   - id: "Push api image to GCP ☁️"
@@ -25,12 +26,16 @@ steps:
     args:
       - "push"
       - "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPO}/${_API_IMAGE_NAME}:${_TAG}"
+    waitFor:
+      - "Build api image 🔨"
 
   - id: "Push front image to GCP ☁️"
     name: "gcr.io/cloud-builders/docker"
     args:
       - "push"
       - "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPO}/${_FRONT_IMAGE_NAME}:${_TAG}"
+    waitFor:
+      - "Build front image 🔨"
 
   # Replace image names in pipeline
   - id: "Replace image name with some black magic 🧙"
