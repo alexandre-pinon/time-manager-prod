@@ -38,6 +38,5 @@ defmodule TimeManagerAPIWeb.Router do
     end
 
     resources "/teams", TeamController, except: [:new, :edit]
-    get "/teams/users/:userID", TeamController, :index_user
   end
 end

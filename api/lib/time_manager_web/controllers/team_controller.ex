@@ -14,11 +14,6 @@ defmodule TimeManagerAPIWeb.TeamController do
     render(conn, "index.json", teams: teams)
   end
 
-  def index_user(conn, %{"userID" => userID}) do
-    teams = TimeManagerData.list_teams_per_user(userID)
-    render(conn, "index.json", teams: teams)
-  end
-
   def create(conn, %{"team" => team_params}) do
     with {:ok, %Team{} = team} <- TimeManagerData.create_team(team_params) do
       conn

@@ -391,12 +391,6 @@ defmodule TimeManagerAPI.TimeManagerData do
     Repo.all(Team) |> Repo.preload(:users)
   end
 
-  def list_teams_per_user(userID) do
-    TeamUser
-    |> where(user_id: ^userID)
-    |> Repo.all()
-  end
-
   @doc """
   Gets a single team.
 
