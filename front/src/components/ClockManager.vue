@@ -61,6 +61,7 @@ export default mixins(API).extend({
       // this.time = moment().startOf("date").format("HH:mm:ss");
       const { $route: route } = this;
       const { userId } = route?.params || {};
+      if (!+userId) return;
       let { data: clock } = (await this.getSingleClock(+userId)) || {};
       if (!clock)
         clock = (
@@ -91,6 +92,7 @@ export default mixins(API).extend({
       // }
       const { $route: route, startDateTime } = this;
       const { userId } = route?.params || {};
+      if (!+userId) return;
       const [oldTime, newTime] = [startDateTime, moment()];
       this.clockIn = !this.clockIn;
       this.startDateTime = newTime;
