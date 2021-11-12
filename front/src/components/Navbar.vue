@@ -89,10 +89,10 @@ export default Vue.extend({
           to: `/home/${userId}`,
           label: "Home",
         },
-        // {
-        //   to: `/workingtimes/${userId}`,
-        //   label: "Working Times",
-        // },
+        {
+          to: `/workingtimes/${userId}`,
+          label: "Working Times",
+        },
         // {
         //   to: `/workingtime/${userId}`,
         //   label: "Working Time",

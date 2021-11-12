@@ -1,12 +1,12 @@
 <template>
   <div class="working-times flex f-column">
-    WTs - {{ computedUserId || "No userId loaded" }}
+    WTs - {{ $route.params.userId || "No userId loaded" }}
     <Card
       v-for="(wt, idx) in workingTimes"
       class="working-times-card"
       :key="idx"
     >
-      {{ wt }}
+      {{ wt.start }} - {{ wt.end }}
     </Card>
   </div>
 </template>
@@ -24,12 +24,6 @@ export default mixins(API).extend({
   name: "tm-working-times",
   components: { Card },
   computed: {
-    computedUserId: function (): number {
-      const { currentUser, $route: route } = this;
-      const { id: currentUserId } = currentUser;
-      const { userId } = route?.params || {};
-      return currentUserId && +userId === +currentUserId ? currentUserId : 0;
-    },
     ...mapState(["currentUser"]),
   },
   data() {
@@ -38,19 +32,15 @@ export default mixins(API).extend({
     };
   },
   created() {
-    this.getWorkingTimes();
-  },
-  watch: {
-    computedUserId: function (): void {
-      this.getWorkingTimes();
-    },
+    this.loadWorkingTimes();
   },
   methods: {
-    getWorkingTimes: async function (): Promise<void> {
-      const { computedUserId } = this;
-      if (!computedUserId) return;
-      const { data } = (await this.getWorkingTimes(computedUserId)) || {};
-      this.$set(this, "workingTimes", data || []);
+    loadWorkingTimes: async function (): Promise<void> {
+      const { $route: route } = this;
+      const { userId } = route?.params || {};
+      if (!+userId) return;
+      const { data } = (await this.getWorkingTimes(+userId)) || {};
+      this.$set(this, "workingTimes", _.orderBy(data || [], "start", "desc"));
     },
   },
 });
