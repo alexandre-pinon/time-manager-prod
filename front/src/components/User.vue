@@ -21,15 +21,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-this-alias */
 /* eslint-disable @typescript-eslint/no-empty-function */
-import Vue from "vue";
+import mixins from "vue-typed-mixins";
 import _ from "lodash";
-
 import { mapState } from "vuex";
 
-import api from "@/utils/api";
 import { CardForm, CardResult } from "@/components/forms";
+import { API } from "@/mixins";
 
-export default Vue.extend({
+export default mixins(API).extend({
   name: "tm-user",
   components: {
     CardForm,
@@ -60,13 +59,27 @@ export default Vue.extend({
           jsonData: "createdUser",
           inputs: [
             {
-              name: "username",
-              label: "Username",
-            },
-            {
               name: "email",
               label: "Email",
               type: "email",
+            },
+            {
+              name: "first_name",
+              label: "First name",
+            },
+            {
+              name: "last_name",
+              label: "Last name",
+            },
+            {
+              name: "password",
+              label: "Password",
+              // type: "password",
+            },
+            {
+              name: "password_confirmation",
+              label: "Password confirmation",
+              // type: "password",
             },
           ],
           eventHandler: "createUser",
@@ -122,28 +135,36 @@ export default Vue.extend({
     },
     getUser: async function (formData: any) {
       const { userId: id } = formData;
-      const { data } = (await api.getUser(id)) || {};
+      const { data } = (await this.getSingleUser(id)) || {};
       if (data) this.$store.commit("setUser", data);
       this.jsonData = data;
       return data;
     },
     createUser: async function (formData: any) {
-      const { username, email } = formData;
-      const { data } = (await api.createUser(username, email)) || {};
+      const { email, first_name, last_name, password, password_confirmation } =
+        formData;
+      const { data } =
+        (await this.signUp(
+          first_name,
+          last_name,
+          email,
+          password,
+          password_confirmation
+        )) || {};
       this.jsonData = data;
       return data;
     },
     updateUser: async function (formData: any) {
       const user = _(formData).omitBy(_.isNil).omitBy(_.isEmpty).value();
       const { userId: id } = user;
-      const { data } = (await api.updateUser(id, user)) || {};
+      const { data } = (await this.updateUser(id, user)) || {};
       this.jsonData = data;
       return data;
     },
     deleteUser: async function (formData: any) {
       const { userId: id } = formData;
       const { currentUser } = this;
-      await api.deleteUser(id);
+      await this.deleteUser(id);
       if (id === currentUser?.id) this.$store.commit("setUser", {});
       this.jsonData = { message: `Deleted user n°${id}` };
     },
@@ -151,4 +172,9 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.container {
+  background: $color-background;
+  color: $color-text;
+}
+</style>

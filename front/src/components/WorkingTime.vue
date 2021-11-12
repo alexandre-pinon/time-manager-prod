@@ -21,13 +21,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-this-alias */
 /* eslint-disable @typescript-eslint/no-empty-function */
-import Vue from "vue";
+import mixins from "vue-typed-mixins";
 import { mapState } from "vuex";
-import api from "@/utils/api";
-import { CardForm, CardResult } from "@/components/forms";
 import _ from "lodash";
 
-export default Vue.extend({
+import { CardForm, CardResult } from "@/components/forms";
+import { API } from "@/mixins";
+
+export default mixins(API).extend({
   name: "tm-working-time",
   props: {},
   data() {
@@ -131,26 +132,26 @@ export default Vue.extend({
     },
     getWorkingTime: async function (formData: any) {
       const { userId, id } = formData;
-      const { data } = (await api.getWorkingTime(userId, id)) || {};
+      const { data } = (await this.getSingleWorkingTime(userId, id)) || {};
       this.jsonData = data;
       return data;
     },
     createWorkingTime: async function (formData: any) {
       const { userId, start, end } = formData;
-      const { data } = (await api.createWorkingTime(userId, start, end)) || {};
+      const { data } = (await this.createWorkingTime(userId, start, end)) || {};
       this.jsonData = data;
       return data;
     },
     updateWorkingTime: async function (formData: any) {
       const workingTime = _(formData).omitBy(_.isNil).omitBy(_.isEmpty).value();
       const { id } = workingTime;
-      const { data } = (await api.updateWorkingTime(id, workingTime)) || {};
+      const { data } = (await this.updateWorkingTime(id, workingTime)) || {};
       this.jsonData = data;
       return data;
     },
     deleteWorkingTime: async function (formData: any) {
       const { id } = formData;
-      await api.deleteWorkingTime(id);
+      await this.deleteWorkingTime(id);
       this.jsonData = { message: `Deleted Working Time n°${id}` };
     },
   },

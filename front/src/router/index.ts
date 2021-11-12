@@ -6,7 +6,6 @@ import {
   WorkingTime,
   ClockManager,
   ChartManager,
-  User,
 } from "@/components";
 
 const routes: Array<any> = [
@@ -21,9 +20,7 @@ const routes: Array<any> = [
   },
   {
     path: "/login",
-    components: {
-      content: User,
-    },
+    components: {},
     name: "Login",
   },
   // ANCHOR - Main pages

@@ -57,7 +57,8 @@ export default Vue.extend({
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
     padding: 16px;
     text-align: center;
-    background-color: #f7f7f7;
+    background-color: $color-background;
+    color: $color-text;
     transition: 0.3s;
     display: flex;
     flex-direction: column;

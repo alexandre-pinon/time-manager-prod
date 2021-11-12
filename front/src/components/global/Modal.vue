@@ -4,7 +4,12 @@
       <slot />
     </div>
     <div class="modal-footer flex js-end">
-      <Button class="modal-button" negative @click="$emit('close-modal')">
+      <Button
+        v-if="!hideClose"
+        class="modal-button"
+        negative
+        @click="$emit('close-modal')"
+      >
         Fermer
       </Button>
       <Button
@@ -28,6 +33,7 @@ export default Vue.extend({
   components: { Button },
   props: {
     hasValidate: Boolean,
+    hideClose: Boolean,
   },
 });
 </script>
@@ -41,7 +47,9 @@ div.application {
     right: 0;
     margin: auto;
     padding: 16px;
+    min-width: 15vw;
     max-width: 85vw;
+    min-height: 15vh;
     max-height: 85vh;
     border: 1px solid $color-border;
     border-radius: 4px;

@@ -1,12 +1,22 @@
 <template>
   <div id="app" class="application">
-    <Navbar @toggle-user-modal="() => (showUserModal = !showUserModal)" />
+    <Navbar
+      @toggle-signup-modal="() => (showSignUpModal = !showSignUpModal)"
+      @toggle-signin-modal="() => (showSignInModal = !showSignInModal)"
+    />
     <div class="application-view">
       <Modal
-        v-show="showUserModal"
-        @close-modal="() => (showUserModal = false)"
+        v-if="showSignUpModal"
+        @close-modal="() => (showSignUpModal = false)"
       >
-        <User />
+        <SignUp @sign-up="() => (showSignUpModal = false)" />
+      </Modal>
+      <Modal
+        v-else-if="showSignInModal || $route.path === '/login'"
+        :hide-close="$route.path === '/login'"
+        @close-modal="() => (showSignInModal = false)"
+      >
+        <SignIn @sign-in="() => (showSignInModal = false)" />
       </Modal>
       <div class="flex application-view-wrapper">
         <router-view class="application-side" name="side" />
@@ -25,14 +35,14 @@ import VueRouter, { Route, NavigationGuardNext } from "vue-router";
 import { store } from "@/store";
 import { router } from "@/router";
 
-import { Navbar, User } from "@/components";
+import { Navbar } from "@/components";
 import { Modal } from "@/components/global";
+import { SignUp, SignIn } from "@/components/forms";
 
 Vue.use(VueRouter);
 
 router.beforeEach((to: Route, from: Route, next: NavigationGuardNext<Vue>) => {
-  const tempIsAuthOk = true;
-  if (to?.name !== "Login" && !tempIsAuthOk) next("/login");
+  if (to?.name !== "Login" && !localStorage.getItem("token")) next("/login");
   else next();
 });
 
@@ -41,19 +51,19 @@ export default Vue.extend({
   store,
   router,
   components: {
-    User,
     Navbar,
     Modal,
+    SignUp,
+    SignIn,
   },
   data() {
     return {
-      showUserModal: false,
+      showSignUpModal: false,
+      showSignInModal: false,
     };
   },
-  watch: {
-    showUserModal(val: any) {
-      console.log({ show: val });
-    },
+  created() {
+    this.$store.dispatch("updateAuthStatus");
   },
 });
 </script>

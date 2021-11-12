@@ -80,7 +80,6 @@ export const generateChartData = function (
   const { hoverOffset = 2, ...restOpts } = opts;
   const length: any = _.maxBy(_.values(series), "length")?.length;
   if (!length || labels?.length !== length) return {};
-  console.log({ series, labels, colors, type });
   const isPie = (): boolean => type === "pie";
   return {
     labels,

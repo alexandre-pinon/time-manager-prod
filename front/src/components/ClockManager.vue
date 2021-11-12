@@ -24,16 +24,15 @@
 
 <script lang="ts">
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Vue from "vue";
+import mixins from "vue-typed-mixins";
 import moment, { Moment } from "moment";
-
 import { mapState } from "vuex";
 
-import api from "@/utils/api";
 import { chainPromises } from "@/utils/helpers";
 import { Card, Button } from "@/components/global";
+import { API } from "@/mixins";
 
-export default Vue.extend({
+export default mixins(API).extend({
   name: "tm-clock-manager",
   components: { Card, Button },
   data() {
@@ -46,12 +45,6 @@ export default Vue.extend({
     };
   },
   computed: {
-    computedUserId: function (): number {
-      const { currentUser, $route: route } = this;
-      const { id: currentUserId } = currentUser;
-      const { userId } = route?.params || {};
-      return currentUserId && +userId === +currentUserId ? currentUserId : 0;
-    },
     computedTimer: function (): number {
       const { startDateTime } = this;
       return moment().diff(startDateTime, "seconds");
@@ -66,17 +59,17 @@ export default Vue.extend({
       // this.clockIn = this.clockIn && !this.clockIn;
       // clearInterval(this.timer);
       // this.time = moment().startOf("date").format("HH:mm:ss");
-      const { computedUserId } = this;
-      let { data: clock } = (await api.getClock(1)) || {};
+      const { $route: route } = this;
+      const { userId } = route?.params || {};
+      let { data: clock } = (await this.getSingleClock(+userId)) || {};
       if (!clock)
         clock = (
-          (await api.createClock(
-            1,
+          (await this.createClock(
+            +userId,
             moment().format("YYYY-MM-DD HH:mm:ss"),
             false
           )) || {}
         )?.data;
-      console.log({ clock });
       const { time, status } = clock;
       this.startDateTime = moment(time);
       this.clockIn = status;
@@ -96,18 +89,18 @@ export default Vue.extend({
       //   const tmpUserId = 1;
       //   this.startRecordTime(tmpUserId, time);
       // }
-      const { computedUserId, startDateTime } = this;
+      const { $route: route, startDateTime } = this;
+      const { userId } = route?.params || {};
       const [oldTime, newTime] = [startDateTime, moment()];
       this.clockIn = !this.clockIn;
       this.startDateTime = newTime;
-      console.log({ oldTime, newTime });
-      api.updateClock(1, {
+      this.updateClock(+userId, {
         time: newTime.format("YYYY-MM-DD HH:mm:ss"),
         status: this.clockIn,
       });
       if (!this.clockIn)
-        api.createWorkingTime(
-          1,
+        this.createWorkingTime(
+          +userId,
           oldTime.format("YYYY-MM-DD HH:mm:ss"),
           newTime.format("YYYY-MM-DD HH:mm:ss")
         );
@@ -119,11 +112,10 @@ export default Vue.extend({
       };
 
       const [clockData, workingTimeData] = await chainPromises([
-        api.updateClock(userId, clock),
-        api.createWorkingTime(userId, time, time),
+        this.updateClock(userId, clock),
+        this.createWorkingTime(userId, time, time),
       ]);
       this.currentWorkingTimeId = workingTimeData.id;
-      console.log(clockData, workingTimeData, time);
     },
     endRecordTime: async function (id: number, time: string) {
       const formatedTime = moment(time).format("YYYY-MM-DD HH:mm:ss");
@@ -134,10 +126,9 @@ export default Vue.extend({
       const workingTime = { end: formatedTime };
 
       const res = await chainPromises([
-        api.updateClock(id, clock),
-        api.updateWorkingTime(id, workingTime),
+        this.updateClock(id, clock),
+        this.updateWorkingTime(id, workingTime),
       ]);
-      console.log(res);
     },
   },
 });

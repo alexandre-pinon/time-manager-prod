@@ -13,15 +13,14 @@
 
 <script lang="ts">
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Vue from "vue";
+import mixins from "vue-typed-mixins";
 import _ from "lodash";
-
 import { mapState } from "vuex";
 
-import api from "@/utils/api";
 import { Card } from "@/components/global";
+import { API } from "@/mixins";
 
-export default Vue.extend({
+export default mixins(API).extend({
   name: "tm-working-times",
   components: { Card },
   computed: {
@@ -50,7 +49,7 @@ export default Vue.extend({
     getWorkingTimes: async function (): Promise<void> {
       const { computedUserId } = this;
       if (!computedUserId) return;
-      const { data } = (await api.getWorkingTimes(computedUserId)) || {};
+      const { data } = (await this.getWorkingTimes(computedUserId)) || {};
       this.$set(this, "workingTimes", data || []);
     },
   },
