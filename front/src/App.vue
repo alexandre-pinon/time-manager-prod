@@ -11,7 +11,6 @@
       >
         <SignUp @sign-up="() => (showSignUpModal = false)" />
       </Modal>
-<<<<<<< HEAD
       <Modal
         v-else-if="showSignInModal || $route.path === '/login'"
         :hide-close="$route.path === '/login'"
@@ -27,10 +26,6 @@
       <Offline v-else />
 
 
-=======
-      <router-view v-if="isOnline" />
-      <Offline v-else />
->>>>>>> mobile + check internet connection
     </div>
   </div>
 </template>
