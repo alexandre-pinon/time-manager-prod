@@ -45,12 +45,6 @@ export default mixins(API).extend({
     };
   },
   computed: {
-    computedUserId: function (): number {
-      const { currentUser, $route: route } = this;
-      const { id: currentUserId } = currentUser;
-      const { userId } = route?.params || {};
-      return currentUserId && +userId === +currentUserId ? currentUserId : 0;
-    },
     computedTimer: function (): number {
       const { startDateTime } = this;
       return moment().diff(startDateTime, "seconds");
@@ -65,17 +59,17 @@ export default mixins(API).extend({
       // this.clockIn = this.clockIn && !this.clockIn;
       // clearInterval(this.timer);
       // this.time = moment().startOf("date").format("HH:mm:ss");
-      const { computedUserId } = this;
-      let { data: clock } = (await this.getSingleClock(computedUserId)) || {};
+      const { $route: route } = this;
+      const { userId } = route?.params || {};
+      let { data: clock } = (await this.getSingleClock(+userId)) || {};
       if (!clock)
         clock = (
           (await this.createClock(
-            computedUserId,
+            +userId,
             moment().format("YYYY-MM-DD HH:mm:ss"),
             false
           )) || {}
         )?.data;
-      if (!clock) return;
       const { time, status } = clock;
       this.startDateTime = moment(time);
       this.clockIn = status;
@@ -95,17 +89,18 @@ export default mixins(API).extend({
       //   const tmpUserId = 1;
       //   this.startRecordTime(tmpUserId, time);
       // }
-      const { computedUserId, startDateTime } = this;
+      const { $route: route, startDateTime } = this;
+      const { userId } = route?.params || {};
       const [oldTime, newTime] = [startDateTime, moment()];
       this.clockIn = !this.clockIn;
       this.startDateTime = newTime;
-      this.updateClock(computedUserId, {
+      this.updateClock(+userId, {
         time: newTime.format("YYYY-MM-DD HH:mm:ss"),
         status: this.clockIn,
       });
       if (!this.clockIn)
         this.createWorkingTime(
-          computedUserId,
+          +userId,
           oldTime.format("YYYY-MM-DD HH:mm:ss"),
           newTime.format("YYYY-MM-DD HH:mm:ss")
         );

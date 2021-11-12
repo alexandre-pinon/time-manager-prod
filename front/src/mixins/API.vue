@@ -18,7 +18,9 @@ export default Vue.extend({
     },
     computedHeaders: function (): Record<string, any> {
       const { token } = this;
-      return { headers: { Authorization: token } };
+      return {
+        headers: { Authorization: token || localStorage.getItem("token") },
+      };
     },
     ...mapState(["currentUser", "token", "url", "port"]),
   },
