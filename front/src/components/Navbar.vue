@@ -21,6 +21,9 @@
       >
     </div>
     <div class="navbar-extras flex">
+      <h2 v-if="currentUser.firstName" class="navbar-hello">
+        Bonjour, {{ currentUser.firstName }}
+      </h2>
       <Button
         v-if="!isLoggedIn"
         class="navbar-link"
@@ -142,6 +145,9 @@ div.application {
     }
     &-link {
       margin: 8px;
+    }
+    &-hello {
+      margin-right: 16px;
     }
   }
 }

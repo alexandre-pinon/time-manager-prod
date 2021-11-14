@@ -1,17 +1,20 @@
 <template>
   <div class="clock-manager flex f-column">
-    Clock - {{ computedUserId || "No username loaded" }}
-    <Card class="clock-manager-content">
-      {{
-        startDateTime
-          ? startDateTime.format("DD/MM/YYYY HH:mm") +
-            " - " +
-            clockIn +
-            " - " +
-            computedTimer
-          : "Chargement..."
-      }}
-      <Button @click="() => clock()"> Changer de statut </Button>
+    <h2>Pointeur</h2>
+    <Card class="clock-manager-content" row edge-spacing full-width>
+      <h3 class="clock-manager-info">
+        Dernière mise à jour le
+        {{
+          startDateTime
+            ? startDateTime.format("DD/MM") +
+              " à " +
+              startDateTime.format("HH:mm")
+            : "..."
+        }}
+      </h3>
+      <Button @click="() => clock()">
+        {{ clockIn ? "Arrêter le compteur" : "Lancer le compteur" }}
+      </Button>
     </Card>
   </div>
   <!-- <div>
@@ -75,7 +78,7 @@ export default mixins(API).extend({
       this.startDateTime = moment(time);
       this.clockIn = status;
     },
-    clock: function (): void {
+    clock: async function (): Promise<void> {
       // const { clockIn, time } = this;
       // this.clockIn = !clockIn;
       // this.startDateTime = moment();
@@ -96,16 +99,18 @@ export default mixins(API).extend({
       const [oldTime, newTime] = [startDateTime, moment()];
       this.clockIn = !this.clockIn;
       this.startDateTime = newTime;
-      this.updateClock(+userId, {
+      await this.updateClock(+userId, {
         time: newTime.format("YYYY-MM-DD HH:mm:ss"),
         status: this.clockIn,
       });
-      if (!this.clockIn)
-        this.createWorkingTime(
+      if (!this.clockIn) {
+        await this.createWorkingTime(
           +userId,
           oldTime.format("YYYY-MM-DD HH:mm:ss"),
           newTime.format("YYYY-MM-DD HH:mm:ss")
         );
+        this.$emit("update");
+      }
     },
     startRecordTime: async function (userId: number, time: string) {
       const clock = {
@@ -140,7 +145,11 @@ export default mixins(API).extend({
 div.application {
   .clock-manager {
     &-content {
-      margin-top: 16px;
+      margin-top: 8px;
+    }
+    &-info {
+      margin-top: auto;
+      margin-bottom: auto;
     }
   }
 }

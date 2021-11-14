@@ -1,5 +1,5 @@
 <template>
-  <canvas :id="chartId" />
+  <canvas :id="chartId" class="charts-canvas" />
 </template>
 
 <script lang="ts">
@@ -15,6 +15,7 @@ export default Vue.extend({
   props: {
     data: { type: Object, default: () => [] },
     options: { type: Object, default: () => {} },
+    title: { type: String, default: "No title" },
     chartId: { type: String, default: "chart" },
     type: { type: String, default: "bar" },
   },

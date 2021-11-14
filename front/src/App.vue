@@ -18,14 +18,28 @@
       >
         <SignIn @sign-in="() => (showSignInModal = false)" />
       </Modal>
-
-      <div class="flex application-view-wrapper" v-if="isOnline">
-        <router-view class="application-side" name="side" />
-        <router-view class="application-content" name="content" />
+      <div class="flex f-nowrap" v-if="isOnline">
+        <div v-if="isDashboard" class="application-view-side flex f-upward">
+          <router-view
+            class="application-side"
+            name="side"
+            @update="() => loadWorkingTimes()"
+          />
+        </div>
+        <div class="application-view-main flex f-column">
+          <router-view
+            class="application-header"
+            name="header"
+            @update="() => loadWorkingTimes()"
+          />
+          <router-view
+            class="application-content"
+            name="content"
+            @update="() => loadWorkingTimes()"
+          />
+        </div>
       </div>
       <Offline v-else />
-
-
     </div>
   </div>
 </template>
@@ -33,13 +47,17 @@
 <script lang="ts">
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-this-alias */
+import mixins from "vue-typed-mixins";
 import Vue from "vue";
 import VueRouter, { Route, NavigationGuardNext } from "vue-router";
+import moment from "moment";
+import _ from "lodash";
 
 import { store } from "@/store";
 import { router } from "@/router";
 
-import { Navbar, User, Offline } from "@/components";
+import { API } from "@/mixins";
+import { Navbar, Offline } from "@/components";
 import { Modal } from "@/components/global";
 import { SignUp, SignIn } from "@/components/forms";
 
@@ -50,7 +68,7 @@ router.beforeEach((to: Route, from: Route, next: NavigationGuardNext<Vue>) => {
   else next();
 });
 
-export default Vue.extend({
+export default mixins(API).extend({
   name: "App",
   store,
   router,
@@ -59,29 +77,62 @@ export default Vue.extend({
     Modal,
     SignUp,
     SignIn,
-    Offline
+    Offline,
   },
   data() {
     return {
       showSignUpModal: false,
       showSignInModal: false,
+      workingTimes: {},
     };
   },
   created() {
     this.$store.dispatch("updateAuthStatus");
+    this.loadWorkingTimes();
   },
   computed: {
     isOnline: function () {
       return navigator.onLine;
     },
+    isDashboard: function () {
+      const { $route: route } = this;
+      const { path = [] } = route;
+      return (
+        path.includes("home" as never) || path.includes("overseer" as never)
+      );
+    },
   },
   watch: {
-    showUserModal(val: any) {
-      console.log({ show: val });
+    showSignInModal(val: any) {
+      if (val) this.showSignUpModal = false;
+    },
+    showSignUpModal(val: any) {
+      if (val) this.showSignInModal = false;
     },
     // InternetConnection() {
     //   console.log({connectionStatus})
     // }
+  },
+  methods: {
+    loadWorkingTimes: async function (): Promise<void> {
+      const { $route: route } = this;
+      const { userId } = route?.params || {};
+      if (!+userId) return;
+      const { data } = (await this.getWorkingTimes(+userId)) || {};
+      // this.$set(
+      //   this,
+      //   "workingTimes",
+      //   _.groupBy(_.orderBy(data || [], "start", "desc"), (data: any) =>
+      //     moment(data?.start).format("DD/MM/YY")
+      //   )
+      // );
+      this.$store.commit(
+        "setWorkingTimes",
+        _.groupBy(_.orderBy(data || [], "start", "desc"), (data: any) =>
+          moment(data?.start).format("DD/MM/YY")
+        )
+      );
+    },
   },
 });
 </script>
@@ -106,6 +157,23 @@ div.application {
   &-view {
     margin: auto;
     padding: auto;
+
+    &-side {
+      flex-grow: 2;
+      flex-shrink: 0;
+      border-right: 1px solid $color-border;
+      padding: 8px;
+    }
+
+    &-main {
+      flex-grow: 3;
+      flex-shrink: 1;
+      padding: 8px;
+    }
+  }
+
+  &-content {
+    margin-top: 16px;
   }
 
   * {
@@ -121,6 +189,14 @@ div.application {
 
   .f-column {
     flex-direction: column;
+  }
+
+  .f-nowrap {
+    flex-wrap: nowrap;
+  }
+
+  .f-upward {
+    align-content: flex-start;
   }
 
   .js-around {
