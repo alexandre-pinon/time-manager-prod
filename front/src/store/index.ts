@@ -14,6 +14,7 @@ export const store = new Vuex.Store({
     isLoggedIn: false,
     isAdmin: false,
     isManager: false,
+    workingTimes: {},
     url:
       process?.env?.NODE_ENV === "production"
         ? `http://${config?.API_HOST || "localhost"}`
@@ -25,7 +26,13 @@ export const store = new Vuex.Store({
   },
   mutations: {
     setUser: function (state: any, value: any) {
-      const { id, email, firstName, lastName, role = "user" } = value;
+      const {
+        id,
+        email,
+        first_name: firstName,
+        last_name: lastName,
+        role = "user",
+      } = value;
       state.currentUser = { id, firstName, lastName, email, role };
     },
     setToken: function (state: any, value: string) {
@@ -39,6 +46,9 @@ export const store = new Vuex.Store({
     },
     setIsManager: function (state: any, value: boolean) {
       state.isManager = value;
+    },
+    setWorkingTimes: function (state: any, value: Record<string, any>) {
+      state.workingTimes = value;
     },
   },
   actions: {

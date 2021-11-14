@@ -1,7 +1,12 @@
 <template>
   <div class="charts flex">
-    <div v-for="(chart, idx) in computedCharts" :key="idx" class="charts-cell">
-      <div class="charts-card shadow">
+    <div
+      v-for="(chart, idx) in computedCharts"
+      :key="idx"
+      class="charts-card shadow"
+    >
+      <h3>{{ chart.title || "No title" }}</h3>
+      <div class="charts-card-content">
         <Chart v-bind="chart" />
       </div>
     </div>
@@ -144,14 +149,17 @@ export default mixins(API).extend({
 <style lang="scss">
 div.application {
   .charts {
-    &-cell {
-      padding: 8px;
-      width: 50%;
-      height: 250px;
-    }
     &-card {
       border-radius: 4px;
-      height: 100%;
+      padding: 8px;
+      margin: 8px;
+      max-width: 50%;
+      min-width: 40%;
+      flex-grow: 1;
+      flex-shrink: 0;
+      &-content {
+        height: 80%;
+      }
     }
   }
 }

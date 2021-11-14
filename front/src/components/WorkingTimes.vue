@@ -1,12 +1,22 @@
 <template>
   <div class="working-times flex f-column">
-    WTs - {{ $route.params.userId || "No userId loaded" }}
+    <h2>Vos heures de travail</h2>
     <Card
-      v-for="(wt, idx) in workingTimes"
+      v-for="(day, key) in workingTimes"
       class="working-times-card"
-      :key="idx"
+      full-width
+      :key="key"
     >
-      {{ wt.start }} - {{ wt.end }}
+      <h3>{{ key }}</h3>
+      <h4>{{ computeBorders(day) }}</h4>
+      <div
+        v-for="(wt, idx) in computeOrderedDay(day)"
+        class="working-times-detail"
+        :key="idx"
+      >
+        {{ computeHour(wt.start || "") }} -
+        {{ computeHour(wt.end || "") }}
+      </div>
     </Card>
   </div>
 </template>
@@ -15,6 +25,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import mixins from "vue-typed-mixins";
 import _ from "lodash";
+import moment from "moment";
 import { mapState } from "vuex";
 
 import { Card } from "@/components/global";
@@ -24,24 +35,36 @@ export default mixins(API).extend({
   name: "tm-working-times",
   components: { Card },
   computed: {
-    ...mapState(["currentUser"]),
-  },
-  data() {
-    return {
-      workingTimes: [],
-    };
-  },
-  created() {
-    this.loadWorkingTimes();
+    ...mapState(["currentUser", "workingTimes"]),
   },
   methods: {
-    loadWorkingTimes: async function (): Promise<void> {
-      const { $route: route } = this;
-      const { userId } = route?.params || {};
-      if (!+userId) return;
-      const { data } = (await this.getWorkingTimes(+userId)) || {};
-      this.$set(this, "workingTimes", _.orderBy(data || [], "start", "desc"));
+    computeHour: function (date: string): string {
+      if (!date) return "Heure inconnue";
+      return moment(date).format("HH:mm");
+    },
+    computeOrderedDay: function (
+      entries: Array<Record<string, any>>
+    ): Array<Record<string, any>> {
+      return _.orderBy(entries, "start", "asc");
+    },
+    computeBorders: function (entries: Array<Record<string, any>>): string {
+      const orderedEntries = this.computeOrderedDay(entries);
+      return (
+        moment(_.head(orderedEntries)?.start).format("HH:mm") +
+        " > " +
+        moment(_.last(orderedEntries)?.end).format("HH:mm")
+      );
     },
   },
 });
 </script>
+
+<style lang="scss">
+div.application {
+  .working-times {
+    &-card {
+      margin-top: 8px;
+    }
+  }
+}
+</style>

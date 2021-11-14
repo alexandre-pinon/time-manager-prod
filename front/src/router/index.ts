@@ -7,7 +7,7 @@ import {
   ClockManager,
   ChartManager,
   User,
-  Offline
+  Offline,
 } from "@/components";
 
 const routes: Array<any> = [
@@ -29,13 +29,20 @@ const routes: Array<any> = [
   {
     path: "/home/:userId",
     components: {
-      side: ClockManager,
+      header: ClockManager,
+      side: WorkingTimes,
       content: ChartManager,
     },
     name: "Home",
   },
   {
     path: "/overseer",
+    components: {
+      header: WorkingTime,
+      side: User,
+      content: ChartManager,
+    },
+    name: "Overseer",
   },
   // ANCHOR - Detailed views
   {
@@ -63,12 +70,12 @@ const routes: Array<any> = [
     components: { content: ChartManager },
     name: "Charts",
   },
-  // ANCHOR - Catch all
+  // ANCHOR - Offline & catch all
+  // { path: "/error", components: { content: Offline }, name: "Offline" },
   {
     path: "*",
     redirect: "/home",
   },
-  { path: "/error", component: Offline, name: "offline mode"}
 ];
 
 export const router = new VueRouter({ routes, mode: "history" });
