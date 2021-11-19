@@ -41,10 +41,39 @@ steps:
   - id: "Replace image name with some black magic 🧙"
     name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
     entrypoint: "bash"
-    args: ["${_CLOUDBUILD_DIR}/envsubst.sh", "${_CLOUDBUILD_DIR}/pipeline.yml"]
+    args:
+      - "${_CLOUDBUILD_DIR}/envsubst.sh"
+      - "${_CLOUDBUILD_DIR}/pipeline.yml"
     env:
       - "_API_IMAGE_FULLNAME=${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPO}/${_API_IMAGE_NAME}:${_TAG}"
       - "_FRONT_IMAGE_FULLNAME=${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_ARTIFACT_REPO}/${_FRONT_IMAGE_NAME}:${_TAG}"
+    waitFor:
+      - "-"
+
+  # Recycle depoyment
+  - id: "Delete api deployment cause I can ♻️"
+    name: "gcr.io/cloud-builders/kubectl"
+    args:
+      - "delete"
+      - "deployment"
+      - "${_API_DEPLOYMENT_NAME}"
+    env:
+      - "CLOUDSDK_COMPUTE_REGION=${_LOCATION}"
+      - "CLOUDSDK_CONTAINER_CLUSTER=${_CLUSTER_NAME}"
+    waitFor:
+      - "Push api image to GCP ☁️"
+
+  - id: "Delete front deployment cause I can ♻️"
+    name: "gcr.io/cloud-builders/kubectl"
+    args:
+      - "delete"
+      - "deployment"
+      - "${_FRONT_DEPLOYMENT_NAME}"
+    env:
+      - "CLOUDSDK_COMPUTE_REGION=${_LOCATION}"
+      - "CLOUDSDK_CONTAINER_CLUSTER=${_CLUSTER_NAME}"
+    waitFor:
+      - "Push front image to GCP ☁️"
 
   # Deploy kubernetes ressources to GKE
   - id: "Apply deployments 🚀"
@@ -63,5 +92,7 @@ substitutions:
   _LOCATION: europe-west1
   _ARTIFACT_REPO: pr-ftw-repo
   _API_IMAGE_NAME: time-manager-api
+  _API_DEPLOYMENT_NAME: api-deployment
   _FRONT_IMAGE_NAME: time-manager-front
+  _FRONT_DEPLOYMENT_NAME: front-deployment
   _TAG: "1.0"
