@@ -61,7 +61,7 @@ steps:
       - "CLOUDSDK_COMPUTE_REGION=${_LOCATION}"
       - "CLOUDSDK_CONTAINER_CLUSTER=${_CLUSTER_NAME}"
     waitFor:
-      - "Push api image to GCP ☁️"
+      - "Build api image 🔨"
 
   - id: "Delete front deployment cause I can ♻️"
     name: "gcr.io/cloud-builders/kubectl"
@@ -73,7 +73,7 @@ steps:
       - "CLOUDSDK_COMPUTE_REGION=${_LOCATION}"
       - "CLOUDSDK_CONTAINER_CLUSTER=${_CLUSTER_NAME}"
     waitFor:
-      - "Push front image to GCP ☁️"
+      - "Build front image 🔨"
 
   # Deploy kubernetes ressources to GKE
   - id: "Apply deployments 🚀"
