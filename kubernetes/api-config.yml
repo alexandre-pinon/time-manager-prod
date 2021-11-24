@@ -4,4 +4,4 @@ metadata:
   name: api-config
 data:
   api-host: "pr-ftw-timemanager.ml"
-  api-port: "80"
+  api-port: "443"
