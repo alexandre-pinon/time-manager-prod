@@ -122,11 +122,7 @@ export default Vue.extend({
       console.log("updateRole : ", id);
       if (!["user", "manager", "admin"].includes(role)) return;
       return await axios
-        .put(
-          `${computedUrl}/users/set_role/${id}`,
-          { user: { role } },
-          computedHeaders
-        )
+        .put(`${computedUrl}/users/set_role/${id}`, { role }, computedHeaders)
         .then((result: any) => result?.data)
         .catch((err: any) => handleError("updateRole", err));
     },
@@ -269,7 +265,7 @@ export default Vue.extend({
         .then((result: any) => result?.data)
         .catch((err: any) => handleError("getUserTeams", err));
     },
-    async createTeam(name: string): Promise<any> {
+    async createTeam(name: string, ids: Array<number>): Promise<any> {
       const { computedHeaders, computedUrl } = this;
       console.log("createTeam : ", name);
       return await axios
@@ -278,7 +274,7 @@ export default Vue.extend({
           {
             team: {
               name,
-              user_ids: [],
+              user_ids: ids || [],
             },
           },
           computedHeaders

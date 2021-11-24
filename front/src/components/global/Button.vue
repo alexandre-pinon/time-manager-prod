@@ -1,5 +1,5 @@
 <template>
-  <div
+  <button
     :class="{
       'button flex js-center': true,
       'button-transparent': transparent,
@@ -12,7 +12,7 @@
       'min-width': height || small ? '32px' : '48px',
       width: icon ? (height || small ? '32px' : '48px') : 'auto',
     }"
-    @click="(event) => $emit('click', event)"
+    @click.stop="(event) => $emit('btn-click', event)"
   >
     <router-link
       v-if="to"
@@ -28,7 +28,7 @@
     >
       <slot />
     </div>
-  </div>
+  </button>
 </template>
 
 <script lang="ts">
@@ -56,6 +56,9 @@ div.application {
     border-radius: 4px;
     padding-left: 8px;
     padding-right: 8px;
+    font: inherit;
+    outline: inherit;
+    border: none;
     &.button-round {
       border-radius: 50%;
     }
