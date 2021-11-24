@@ -75,13 +75,27 @@ export default Vue.extend({
         .then((result: any) => result?.data)
         .catch((err: any) => handleError("getSingleUser", err));
     },
-    async createUser(username: string, email: string): Promise<any> {
+    async createUser(
+      email: string,
+      firstName: string,
+      lastName: string,
+      password: string,
+      passwordConfirm: string
+    ): Promise<any> {
       const { computedHeaders, computedUrl } = this;
-      console.log("createUser : ", username, email);
+      console.log("createUser : ", firstName, lastName, email);
       return await axios
         .post(
           `${computedUrl}/users`,
-          { user: { username, email } },
+          {
+            user: {
+              first_name: firstName,
+              last_name: lastName,
+              password,
+              password_confirmation: passwordConfirm,
+              email,
+            },
+          },
           computedHeaders
         )
         .then((result: any) => result?.data)
@@ -239,7 +253,7 @@ export default Vue.extend({
         .then((result: any) => result?.data)
         .catch((err: any) => handleError("getTeams", err));
     },
-    async getSingleTeam(id: number): Promise<void> {
+    async getSingleTeam(id: number): Promise<any> {
       const { computedHeaders, computedUrl } = this;
       console.log("getSingleTeam : ", id);
       return await axios
@@ -264,6 +278,7 @@ export default Vue.extend({
           {
             team: {
               name,
+              user_ids: [],
             },
           },
           computedHeaders

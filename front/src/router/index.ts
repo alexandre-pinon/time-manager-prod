@@ -7,7 +7,6 @@ import {
   ClockManager,
   ChartManager,
   User,
-  Offline,
 } from "@/components";
 
 const routes: Array<any> = [
@@ -38,7 +37,7 @@ const routes: Array<any> = [
   {
     path: "/overseer",
     components: {
-      header: WorkingTime,
+      // header: WorkingTime,
       side: User,
       content: ChartManager,
     },

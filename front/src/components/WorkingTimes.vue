@@ -62,6 +62,7 @@ export default mixins(API).extend({
 <style lang="scss">
 div.application {
   .working-times {
+    width: 100%;
     &-card {
       margin-top: 8px;
     }

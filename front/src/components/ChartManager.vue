@@ -153,7 +153,7 @@ div.application {
       border-radius: 4px;
       padding: 8px;
       margin: 8px;
-      max-width: 50%;
+      max-width: 49%;
       min-width: 40%;
       flex-grow: 1;
       flex-shrink: 0;

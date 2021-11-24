@@ -52,6 +52,7 @@ import Vue from "vue";
 import VueRouter, { Route, NavigationGuardNext } from "vue-router";
 import moment from "moment";
 import _ from "lodash";
+import { mapState } from "vuex";
 
 import { store } from "@/store";
 import { router } from "@/router";
@@ -64,8 +65,36 @@ import { SignUp, SignIn } from "@/components/forms";
 Vue.use(VueRouter);
 
 router.beforeEach((to: Route, from: Route, next: NavigationGuardNext<Vue>) => {
-  if (to?.name !== "Login" && !localStorage.getItem("token")) next("/login");
-  else next();
+  const vm: any = router?.app;
+  const { isManager, isAdmin, currentUser } = vm?.$store?.state || {};
+  let { id: userId } = currentUser;
+  if (!userId) userId = localStorage.getItem("id");
+  const token = localStorage.getItem("token");
+
+  if (to?.name !== "Login" && !token) next("/login");
+  else {
+    console.log(to?.name, to?.params?.userId, {
+      userId,
+      currentUser,
+      isManager,
+      isAdmin,
+    });
+    if (to?.name === "Login") next();
+    if (
+      !isAdmin &&
+      !isManager &&
+      (to?.name === "Overseer" || +(to?.params || {})?.userId !== +userId)
+    )
+      next(`/home/${userId}`);
+    // else if (
+    //   isAdmin ||
+    //   isManager ||
+    //   to?.name === "Overseer" ||
+    //   (to?.name === "Home" && +(to?.params || {})?.userId !== +userId)
+    // )
+    //   next();
+    else next();
+  }
 });
 
 export default mixins(API).extend({
@@ -83,24 +112,23 @@ export default mixins(API).extend({
     return {
       showSignUpModal: false,
       showSignInModal: false,
-      workingTimes: {},
     };
   },
   created() {
-    this.$store.dispatch("updateAuthStatus");
-    this.loadWorkingTimes();
+    this.init();
   },
   computed: {
-    isOnline: function () {
+    isOnline: function (): boolean {
       return navigator.onLine;
     },
-    isDashboard: function () {
+    isDashboard: function (): boolean {
       const { $route: route } = this;
       const { path = [] } = route;
       return (
         path.includes("home" as never) || path.includes("overseer" as never)
       );
     },
+    ...mapState(["token", "currentUser", "isAdmin", "isManager"]),
   },
   watch: {
     showSignInModal(val: any) {
@@ -109,23 +137,24 @@ export default mixins(API).extend({
     showSignUpModal(val: any) {
       if (val) this.showSignInModal = false;
     },
-    // InternetConnection() {
-    //   console.log({connectionStatus})
-    // }
+    token(val: string) {
+      if (val) this.loadWorkingTimes();
+    },
   },
   methods: {
+    init: async function () {
+      await this.$store.dispatch("updateAuthStatus");
+      if (!localStorage?.token) {
+        this.$router.push("/login");
+        return;
+      }
+      await this.loadWorkingTimes();
+    },
     loadWorkingTimes: async function (): Promise<void> {
-      const { $route: route } = this;
-      const { userId } = route?.params || {};
+      const { currentUser } = this;
+      const { id: userId } = currentUser || {};
       if (!+userId) return;
       const { data } = (await this.getWorkingTimes(+userId)) || {};
-      // this.$set(
-      //   this,
-      //   "workingTimes",
-      //   _.groupBy(_.orderBy(data || [], "start", "desc"), (data: any) =>
-      //     moment(data?.start).format("DD/MM/YY")
-      //   )
-      // );
       this.$store.commit(
         "setWorkingTimes",
         _.groupBy(_.orderBy(data || [], "start", "desc"), (data: any) =>
@@ -159,14 +188,15 @@ div.application {
     padding: auto;
 
     &-side {
-      flex-grow: 2;
+      min-width: 25vw;
+      flex-grow: 4;
       flex-shrink: 0;
       border-right: 1px solid $color-border;
       padding: 8px;
     }
 
     &-main {
-      flex-grow: 3;
+      flex-grow: 5;
       flex-shrink: 1;
       padding: 8px;
     }
@@ -217,6 +247,10 @@ div.application {
 
   .js-end {
     justify-content: end;
+  }
+
+  .js-stretch {
+    justify-content: stretch;
   }
 
   // ANCHOR CSS Helpers - Colors

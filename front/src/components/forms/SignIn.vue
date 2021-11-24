@@ -25,6 +25,7 @@
 
 <script lang="ts">
 import mixins from "vue-typed-mixins";
+import { mapState } from "vuex";
 
 import { API } from "@/mixins";
 import { Button } from "@/components/global";
@@ -40,13 +41,18 @@ export default mixins(API).extend({
       password: "",
     };
   },
+  computed: {
+    ...mapState(["isAdmin", "isManager"]),
+  },
   methods: {
     submit: async function () {
-      const { email, password } = this;
-      const { token, id } = (await this.signIn(email, password))?.data || {};
+      const { email, password, isAdmin, isManager } = this;
+      const { token, id, role } =
+        (await this.signIn(email, password))?.data || {};
       if (!token || !id) return;
-      await this.$store.dispatch("updateAuthStatus", { token, id });
-      this.$router.push(`/home/${id}`);
+      await this.$store.dispatch("updateAuthStatus", { token, id, role });
+      if (!isAdmin && !isManager) this.$router.push(`/home/${id}`);
+      else this.$router.push("/overseer");
       this.$emit("sign-in");
     },
   },

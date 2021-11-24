@@ -10,7 +10,9 @@
     :style="{
       height: height || small ? '32px' : '48px',
       'min-width': height || small ? '32px' : '48px',
+      width: icon ? (height || small ? '32px' : '48px') : 'auto',
     }"
+    @click="(event) => $emit('click', event)"
   >
     <router-link
       v-if="to"

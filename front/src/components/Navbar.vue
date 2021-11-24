@@ -12,13 +12,13 @@
   <div v-else class="navbar navbar-full flex js-between shadow">
     <div class="navbar-links flex js-center">
       <Button
-        v-for="(link, idx) in computedLinks"
         class="navbar-link"
         transparent
-        :key="idx"
-        :to="link.to"
-        >{{ link.label }}</Button
+        :to="'/home/' + (currentUser || {}).id || 0"
       >
+        Accueil
+      </Button>
+      <Button class="navbar-link" transparent to="/overseer"> Admin </Button>
     </div>
     <div class="navbar-extras flex">
       <h2 v-if="currentUser.firstName" class="navbar-hello">
@@ -92,26 +92,6 @@ export default Vue.extend({
           to: `/home/${userId}`,
           label: "Home",
         },
-        {
-          to: `/workingtimes/${userId}`,
-          label: "Working Times",
-        },
-        // {
-        //   to: `/workingtime/${userId}`,
-        //   label: "Working Time",
-        // },
-        // {
-        //   to: `/workingtime/${userId}/:workingTimeId`,
-        //   label: "Working Time",
-        // },
-        {
-          to: `/clock/${userId}`,
-          label: "Clock",
-        },
-        // {
-        //   to: `/chartmanager/${userId}`,
-        //   label: "Charts",
-        // },
       ];
     },
     ...mapState(["currentUser", "isLoggedIn"]),
