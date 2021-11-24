@@ -50,7 +50,7 @@
         class="sign-up-field"
       />
     </div>
-    <Button @click="() => submit()" class="sign-up-button">{{
+    <Button @click.once="() => submit()" class="sign-up-button">{{
       editId ? "Sauvegarder" : "Inscription"
     }}</Button>
   </div>
@@ -101,6 +101,7 @@ export default mixins(API).extend({
         editId,
       } = this;
       if (editId) {
+        console.log("updating user", firstName);
         await this.updateUser(editId, {
           email,
           first_name: firstName,

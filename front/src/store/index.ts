@@ -17,7 +17,7 @@ export const store = new Vuex.Store({
     workingTimes: {},
     url:
       process?.env?.NODE_ENV === "production"
-        ? `http://${config?.API_HOST || "localhost"}`
+        ? `https://${config?.API_HOST || "localhost"}`
         : "http://localhost",
     port:
       process?.env?.NODE_ENV === "production"

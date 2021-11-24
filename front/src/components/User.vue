@@ -2,9 +2,16 @@
   <div class="user">
     <Modal v-if="showEditModal" @close-modal="() => (showEditModal = false)">
       <SignUp
-        :edit-id="selectedUser"
-        :current-values="users.find((usr) => usr.id === selectedUser)"
-        @edit-complete="() => handleEvent('save')"
+        :edit-id="selectedUser.id"
+        :current-values="selectedUser"
+        @edit-completed="() => handleEvent('saveUser')"
+      />
+    </Modal>
+    <Modal v-if="showTeamModal" @close-modal="() => (showTeamModal = false)">
+      <TeamForm
+        :edit-id="selectedTeam.id"
+        :current-values="selectedTeam"
+        @edit-completed="() => handleEvent('saveTeam')"
       />
     </Modal>
     <h2>Gérer vos équipes</h2>
@@ -51,8 +58,8 @@
         <div
           v-for="(user, idx) in users"
           :key="idx"
-          :class="{ 'user-table-row flex js-between': true, pointer: isAdmin }"
-          @click="() => handleEvent('select', user.id)"
+          class="user-table-row flex js-between pointer"
+          @click="() => handleEvent('selectUser', user.id)"
         >
           <span
             class="user-table-cell"
@@ -84,14 +91,18 @@
             class="user-table-cell flex js-even"
             :style="{ width: isAdmin ? '16%' : '20%' }"
           >
-            <Button icon small @click.stop="() => handleEvent('edit', user.id)">
+            <Button
+              icon
+              small
+              @btn-click="() => handleEvent('editUser', user.id)"
+            >
               <UserIcon />
             </Button>
             <Button
               negative
               icon
               small
-              @click.stop="() => handleEvent('delete', user.id)"
+              @btn-click="() => handleEvent('deleteUser', user.id)"
             >
               <UserXIcon />
             </Button>
@@ -102,44 +113,53 @@
       <div class="user-card-footer">
         <div class="user-team-header flex js-between">
           <div>
-            <label for="team-input">Equipe n°</label>
+            <label for="team-input">Ajouter à</label>
             <input
-              v-model="currentTeam"
+              v-model="newTeamName"
               id="team-input"
               type="text"
               class="user-field"
+              placeholder="Nom"
             />
           </div>
-          <Button small @click="() => handleEvent('team')">Valider</Button>
+          <Button small @btn-click="() => handleEvent('team')">{{
+            computedFieldTeam.id ? "Ajouter" : "Créer"
+          }}</Button>
         </div>
         <div
-          v-if="team.name && (team.users || []).length"
+          v-if="selectedUser && (selectedUser.teams || []).length"
           class="user-team-body"
         >
           <div class="flex js-between user-table-header">
             <span class="user-table-cell" :style="{ width: '33%' }">Nom</span>
-            <span class="user-table-cell" :style="{ width: '33%' }">Rôle</span>
             <span class="user-table-cell" :style="{ width: '33%' }"
-              >Retirer</span
+              >Taille</span
             >
+            <span class="user-table-cell" :style="{ width: '33%' }">Adm.</span>
           </div>
           <div
-            v-for="(user, idx) in team.users"
+            v-for="(team, idx) in selectedUser.teams || []"
             :key="idx"
-            class="user-table-row flex js-between"
+            class="user-table-row flex js-between pointer"
+            @click="() => handleEvent('selectTeam', team.id)"
           >
-            <span class="user-table-cell" :style="{ width: '33%' }"
-              >{{ user.first_name[0] }}. {{ user.last_name }}</span
-            >
             <span class="user-table-cell" :style="{ width: '33%' }">{{
-              user.role
+              team.name
             }}</span>
+            <span class="user-table-cell" :style="{ width: '33%' }">Temp</span>
             <div class="user-table-cell flex js-even" :style="{ width: '33%' }">
+              <Button
+                icon
+                small
+                @btn-click="() => handleEvent('editTeam', team.id)"
+              >
+                <UserIcon />
+              </Button>
               <Button
                 negative
                 icon
                 small
-                @click.stop="() => handleEvent('remove', user.id)"
+                @btn-click="() => handleEvent('deleteTeam', team.id)"
               >
                 <UserXIcon />
               </Button>
@@ -147,22 +167,10 @@
           </div>
         </div>
         <div v-else class="user-team-body-empty">
-          <div v-if="team.name">L'équipe sélectionnée est vide</div>
-          <div v-else>Aucune équipe sélectionnée</div>
-        </div>
-        <div v-if="team.name" class="user-team-footer flex js-between">
-          <div>
-            <label for="email-input">Utilisateur :</label>
-            <input
-              v-model="selectedUser"
-              id="email-input"
-              type="number"
-              class="user-field"
-            />
-          </div>
-          <Button small @click="() => handleEvent('add', selectedUser)"
-            >Ajouter</Button
+          <span v-if="selectedUser.id"
+            >L'utilisateur sélectionné n'a pas d'équipe</span
           >
+          <span v-else>Aucun utilisateur sélectionné</span>
         </div>
       </div>
     </Card>
@@ -180,7 +188,7 @@ import moment from "moment";
 import { UserXIcon, UserIcon } from "vue-feather-icons";
 
 import { Card, Button, Modal } from "@/components/global";
-import { SignUp } from "@/components/forms";
+import { SignUp, TeamForm } from "@/components/forms";
 import { API } from "@/mixins";
 import { chainPromises } from "@/utils/helpers";
 
@@ -193,18 +201,25 @@ export default mixins(API).extend({
     UserIcon,
     SignUp,
     Modal,
+    TeamForm,
   },
   data() {
     return {
       currentDate: moment(),
-      currentTeam: "",
+      newTeamName: "",
       users: [],
-      team: {},
-      selectedUser: 0,
+      teams: [],
+      selectedUser: {},
+      selectedTeam: {},
       showEditModal: false,
+      showTeamModal: false,
     };
   },
   computed: {
+    computedFieldTeam: function (): Record<string, any> {
+      const { teams, newTeamName } = this;
+      return teams.find((tm: any) => tm?.name === newTeamName) || {};
+    },
     ...mapState(["currentUser", "isAdmin"]),
   },
   created() {
@@ -213,6 +228,7 @@ export default mixins(API).extend({
   methods: {
     init: async function () {
       await this.loadUsers();
+      await this.loadTeams();
     },
     loadUsers: async function () {
       const data = _.sortBy(
@@ -238,55 +254,84 @@ export default mixins(API).extend({
         })
       );
     },
-    loadTeam: async function () {
-      const { currentTeam } = this;
-      let data;
-      if (!+currentTeam)
-        data = ((await this.createTeam(currentTeam)) || {})?.data;
-      else data = ((await this.getSingleTeam(+currentTeam)) || {})?.data;
-      this.$set(this, "team", data);
-      console.log({ team: data });
+    loadTeams: async function () {
+      const data = _.sortBy(
+        await this.getAllTeams().then((result: any) => result?.data),
+        "name"
+      );
+      this.$set(this, "teams", data);
     },
-    handleEvent: async function (event: string, userId: number) {
-      const { team } = this;
+    handleEvent: async function (event: string, targetId: number) {
+      const {
+        newTeamName,
+        computedFieldTeam: team,
+        teams,
+        users,
+        selectedUser,
+      } = this;
+      console.log(event);
       switch (event) {
-        case "delete":
-          await this.deleteUser(userId);
+        case "deleteUser":
+          await this.deleteUser(targetId);
+          await this.loadTeams();
           await this.loadUsers();
           break;
-        case "edit":
-          this.selectedUser = userId;
+        case "deleteTeam":
+          await this.deleteTeam(targetId);
+          await this.loadTeams();
+          await this.loadUsers();
+          this.selectedUser = {};
+          break;
+        case "editUser":
+          this.selectedUser = users.find(
+            (usr: any) => usr?.id === targetId
+          ) as any;
           this.showEditModal = true;
           break;
-        case "save":
+        case "editTeam":
+          this.selectedTeam = teams.find(
+            (tm: any) => tm?.id === targetId
+          ) as any;
+          this.showTeamModal = true;
+          break;
+        case "saveUser":
           this.showEditModal = false;
-          this.selectedUser = 0;
+          this.selectedUser = {};
+          await this.loadTeams();
+          await this.loadUsers();
+          break;
+        case "saveTeam":
+          this.showTeamModal = false;
+          this.selectedTeam = {};
+          await this.loadTeams();
           await this.loadUsers();
           break;
         case "team":
-          await this.loadTeam();
-          break;
-        case "select":
-          this.selectedUser = userId;
-          break;
-        case "add":
-          if (userId && !(team as any)?.users?.includes(+userId))
-            await this.updateTeam((team as any)?.id, {
+          if (team?.id)
+            await this.updateTeam(team?.id, {
               user_ids: [
-                ...(team as any)?.users.map((usr: any) => usr?.id),
-                +userId,
+                ...team?.users?.map((usr: any) => usr?.id),
+                (selectedUser as any)?.id,
               ],
             });
-          await this.loadTeam();
+          else
+            await this.createTeam(
+              newTeamName,
+              (selectedUser as any)?.id ? [(selectedUser as any)?.id] : []
+            );
+          await this.loadTeams();
+          await this.loadUsers();
+          this.selectedUser = {};
           break;
-        case "remove":
-          if (userId && !(team as any)?.users?.includes(+userId))
-            await this.updateTeam((team as any)?.id, {
-              user_ids: (team as any)?.users
-                .map((usr: any) => usr?.id)
-                .filter((usrId: any) => usrId !== +userId),
-            });
-          await this.loadTeam();
+        case "selectUser":
+          this.selectedUser = users.find(
+            (usr: any) => usr?.id === targetId
+          ) as any;
+          break;
+        case "selectTeam":
+          this.selectedTeam = teams.find(
+            (tm: any) => tm?.id === targetId
+          ) as any;
           break;
         default:
           return;

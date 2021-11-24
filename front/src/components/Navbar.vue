@@ -1,5 +1,8 @@
 <template>
-  <div v-if="isMinified" class="navbar navbar-minified shadow flex js-center">
+  <div
+    v-if="isMinified && isLoggedIn"
+    class="navbar navbar-minified shadow flex js-center"
+  >
     <Button
       class="navbar-shortcut"
       icon
@@ -12,13 +15,21 @@
   <div v-else class="navbar navbar-full flex js-between shadow">
     <div class="navbar-links flex js-center">
       <Button
+        v-if="isLoggedIn"
         class="navbar-link"
         transparent
         :to="'/home/' + (currentUser || {}).id || 0"
       >
         Accueil
       </Button>
-      <Button class="navbar-link" transparent to="/overseer"> Admin </Button>
+      <Button
+        v-if="isAdmin || isManager"
+        class="navbar-link"
+        transparent
+        to="/overseer"
+      >
+        Supervision
+      </Button>
     </div>
     <div class="navbar-extras flex">
       <h2 v-if="currentUser.firstName" class="navbar-hello">
@@ -50,6 +61,7 @@
         <UserXIcon />
       </Button>
       <Button
+        v-if="isLoggedIn"
         class="navbar-link"
         transparent
         icon
@@ -94,7 +106,7 @@ export default Vue.extend({
         },
       ];
     },
-    ...mapState(["currentUser", "isLoggedIn"]),
+    ...mapState(["currentUser", "isLoggedIn", "isAdmin", "isManager"]),
   },
   methods: {
     signOut: async function () {
