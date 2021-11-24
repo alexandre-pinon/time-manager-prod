@@ -52,40 +52,53 @@ export const store = new Vuex.Store({
     },
   },
   actions: {
-    updateAuthStatus: async function ({ commit, state }, payload) {
-      const { token, id } = payload || {
+    updateAuthStatus: async function ({ dispatch, commit, state }, payload) {
+      const {
+        token,
+        id,
+        role: localRole,
+      } = payload || {
         token: localStorage.getItem("token"),
         id: +(localStorage.getItem("id") || 0),
+        role: localStorage.getItem("role") || "user",
       };
-      if (token && id) {
-        const { data: user } = await axios
-          .get(`${state.url}:${state.port}/api/users/${id}`, {
-            headers: { Authorization: token },
-          })
-          .then((result: any) => result?.data);
-        if (!user?.role && !user?.id) return;
-        const { role } = user;
+      console.log({ token, id, localRole, payload });
+      if (!token || !id) {
+        await dispatch("removeAuthStatus");
+        return;
+      }
+      const { data: user } = await axios
+        .get(`${state.url}:${state.port}/api/users/${id}`, {
+          headers: { Authorization: token },
+        })
+        .then((result: any) => result?.data)
+        .catch(async (err: any) => {
+          console.log("STORE INIT ERROR - ", err);
+          await dispatch("removeAuthStatus");
+          return;
+        });
+      if (+user?.id === +id && user?.role) {
+        const { role = localRole } = user;
         localStorage.setItem("token", token);
         localStorage.setItem("id", id);
+        localStorage.setItem("role", role);
         commit("setToken", token);
         commit("setUser", user);
         commit("setIsLoggedIn", true);
         commit("setIsAdmin", role === "admin");
         commit("setIsManager", role === "manager");
-      } else {
-        localStorage.setItem("token", "");
-        localStorage.setItem("id", "");
-        commit("setToken", "");
-        commit("setUser", {});
-        commit("setIsLoggedIn", false);
-        commit("setIsAdmin", false);
-        commit("setIsManager", false);
-      }
+      } else await dispatch("removeAuthStatus");
     },
-    removeAuthStatus: async function ({ dispatch }) {
+    removeAuthStatus: async function ({ commit }) {
       localStorage.setItem("token", "");
       localStorage.setItem("id", "");
-      await dispatch("updateAuthStatus");
+      localStorage.setItem("role", "");
+      commit("setToken", "");
+      commit("setUser", {});
+      commit("setWorkingTimes", {});
+      commit("setIsLoggedIn", false);
+      commit("setIsAdmin", false);
+      commit("setIsManager", false);
     },
   },
 });
