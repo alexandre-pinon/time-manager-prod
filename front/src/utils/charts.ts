@@ -95,6 +95,7 @@ export const generateChartData = function (
       return {
         label: key,
         data: val,
+        type: key === "Objectif" ? "line" : type,
         color: chartColors.textColor,
         backgroundColor: isPie()
           ? val.map((v: any, idx: number) => colors[idx] || colors[0])

@@ -62,7 +62,6 @@ export const store = new Vuex.Store({
         id: +(localStorage.getItem("id") || 0),
         role: localStorage.getItem("role") || "user",
       };
-      console.log({ token, id, localRole, payload });
       if (!token || !id) {
         await dispatch("removeAuthStatus");
         return;
@@ -72,8 +71,7 @@ export const store = new Vuex.Store({
           headers: { Authorization: token },
         })
         .then((result: any) => result?.data)
-        .catch(async (err: any) => {
-          console.log("STORE INIT ERROR - ", err);
+        .catch(async () => {
           await dispatch("removeAuthStatus");
           return;
         });

@@ -101,7 +101,6 @@ export default mixins(API).extend({
         editId,
       } = this;
       if (editId) {
-        console.log("updating user", firstName);
         await this.updateUser(editId, {
           email,
           first_name: firstName,

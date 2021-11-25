@@ -69,7 +69,6 @@ export default mixins(API).extend({
     submit: async function () {
       const { name, users, editId } = this;
       if (!editId) return;
-      console.log("updating team", name);
       await this.updateTeam(editId, {
         name,
         user_ids: users.map((usr: any) => usr?.id),
