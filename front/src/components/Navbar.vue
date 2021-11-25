@@ -12,7 +12,7 @@
       <MenuIcon />
     </Button>
   </div>
-  <div v-else class="navbar navbar-full flex js-between shadow">
+  <div v-else class="navbar navbar-full flex js-between shadow" id="navigation">
     <div class="navbar-links flex js-center">
       <Button
         v-if="isLoggedIn"
@@ -124,7 +124,7 @@ div.application {
     top: 0;
     &-full {
       padding-left: 80px;
-      padding-right: 80px;
+      padding-right: 30px;
       top: 0;
       height: 80px;
       width: 100vw;
@@ -141,6 +141,64 @@ div.application {
     &-hello {
       margin-right: 16px;
     }
+  }
+}
+@media screen and (max-width: 600px) {
+  div.application {
+    .navbar {
+      position: absolute;
+      top: 0;
+      &-full {
+        top: 0;
+        height: 80px;
+        width: 100vw;
+      }
+      &-minified {
+        right: 80px;
+        padding: 16px;
+        border-bottom-left-radius: 50%;
+        border-bottom-right-radius: 50%;
+      }
+      &-link {
+        margin: 8px;
+      }
+      &-hello {
+        display: none;
+      }
+    }
+  }
+  #navigation {
+    flex-flow: nowrap;
+  }
+}
+@media screen and (min-width: 600px) and (max-width: 750px) {
+  div.application {
+    .navbar {
+      position: absolute;
+      top: 0;
+      &-full {
+      padding-left: 30px;
+      padding-right: 30px;
+        top: 0;
+        height: 80px;
+        width: 100vw;
+      }
+      &-minified {
+        right: 80px;
+        padding: 16px;
+        border-bottom-left-radius: 50%;
+        border-bottom-right-radius: 50%;
+      }
+      &-link {
+        margin: 8px;
+      }
+      &-hello {
+        display: none;
+      }
+    }
+  }
+  #navigation {
+    flex-flow: nowrap;
   }
 }
 </style>

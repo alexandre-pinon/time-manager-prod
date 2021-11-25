@@ -163,4 +163,22 @@ div.application {
     }
   }
 }
+@media screen and (max-width: 600px) {
+  div.application {
+  .charts {
+    &-card {
+      border-radius: 4px;
+      padding: 8px;
+      margin: 8px;
+      max-width: 100%;
+      min-width: 95%;
+      flex-grow: 1;
+      flex-shrink: 0;
+      &-content {
+        height: 80%;
+      }
+    }
+  }
+}
+}
 </style>

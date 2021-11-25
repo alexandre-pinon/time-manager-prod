@@ -294,5 +294,11 @@ div.application {
   .column {
     width: 100%;
   }
+  div.application .flex {
+    display: flex;
+    align-content: center;
+    flex-wrap: wrap;
+    flex-direction: column;
+  }
 }
 </style>
