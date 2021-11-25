@@ -27,6 +27,7 @@ export default Vue.extend({
   },
   created() {
     this.refreshChart = _.debounce(this.refreshChart, 300);
+    this.refreshChart();
   },
   watch: {
     data: {
@@ -52,17 +53,16 @@ export default Vue.extend({
       const context: HTMLCanvasElement = document.getElementById(
         chartId
       ) as HTMLCanvasElement;
-      if (chart) (this.chart as unknown as Chart)?.update();
-      else
-        this.$set(
-          this,
-          "chart",
-          new Chart(context, {
-            type: type as ChartType,
-            data,
-            options,
-          })
-        );
+      if (chart) (this.chart as unknown as Chart)?.destroy();
+      this.$set(
+        this,
+        "chart",
+        new Chart(context, {
+          type: type as ChartType,
+          data,
+          options,
+        })
+      );
       (this.chart as unknown as Chart)?.render();
       this.updated = true;
     },

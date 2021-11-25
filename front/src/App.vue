@@ -24,6 +24,8 @@
             class="application-side"
             name="side"
             @update="() => loadWorkingTimes()"
+            @select-user="(u) => (selectedUser = u)"
+            @select-team="(t) => (selectedTeam = t)"
           />
         </div>
         <div class="application-view-main flex f-column">
@@ -35,6 +37,9 @@
           <router-view
             class="application-content"
             name="content"
+            :selected-team="selectedTeam"
+            :selected-user="selectedUser"
+            :is-overseer="$route.path.includes('overseer')"
             @update="() => loadWorkingTimes()"
           />
         </div>
@@ -73,12 +78,12 @@ router.beforeEach((to: Route, from: Route, next: NavigationGuardNext<Vue>) => {
 
   if (to?.name !== "Login" && !token) next("/login");
   else {
-    console.log(to?.name, to?.params?.userId, {
-      userId,
-      currentUser,
-      isManager,
-      isAdmin,
-    });
+    // console.log(to?.name, to?.params?.userId, {
+    //   userId,
+    //   currentUser,
+    //   isManager,
+    //   isAdmin,
+    // });
     if (to?.name === "Login") next();
     if (
       !isAdmin &&
@@ -112,6 +117,8 @@ export default mixins(API).extend({
     return {
       showSignUpModal: false,
       showSignInModal: false,
+      selectedUser: {},
+      selectedTeam: {},
     };
   },
   created() {
@@ -154,7 +161,12 @@ export default mixins(API).extend({
       const { currentUser } = this;
       const { id: userId } = currentUser || {};
       if (!+userId) return;
-      const { data } = (await this.getWorkingTimes(+userId)) || {};
+      const { data } =
+        (await this.getWorkingTimes(
+          +userId,
+          moment().startOf("week").format("YYYY-MM-DD"),
+          moment().endOf("week").format("YYYY-MM-DD")
+        )) || {};
       this.$store.commit(
         "setWorkingTimes",
         _.groupBy(_.orderBy(data || [], "start", "desc"), (data: any) =>

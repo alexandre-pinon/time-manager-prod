@@ -269,7 +269,6 @@ export default mixins(API).extend({
         users,
         selectedUser,
       } = this;
-      console.log(event);
       switch (event) {
         case "deleteUser":
           await this.deleteUser(targetId);
@@ -327,11 +326,13 @@ export default mixins(API).extend({
           this.selectedUser = users.find(
             (usr: any) => usr?.id === targetId
           ) as any;
+          this.$emit("select-user", this.selectedUser);
           break;
         case "selectTeam":
           this.selectedTeam = teams.find(
             (tm: any) => tm?.id === targetId
           ) as any;
+          this.$emit("select-team", this.selectedTeam);
           break;
         default:
           return;
