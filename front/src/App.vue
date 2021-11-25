@@ -144,7 +144,7 @@ export default mixins(API).extend({
   methods: {
     init: async function () {
       await this.$store.dispatch("updateAuthStatus");
-      if (!localStorage?.token) {
+      if (this.$route?.name !== "Login" && !localStorage?.token) {
         this.$router.push("/login");
         return;
       }
